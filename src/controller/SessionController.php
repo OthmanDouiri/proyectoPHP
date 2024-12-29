@@ -1,6 +1,11 @@
 <?php
-
+//namespace App\Controller;
 require_once '../src/controller/DatabaseController.php';
+//require_once '../vendor/autoload.php';
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+use PDO;
+use PDOException;
 
 class SessionController {
     private $conn;
@@ -86,7 +91,7 @@ class SessionController {
                 session_start();
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['username'] = $username;
-
+                
                 return true; // Inicio de sesión exitoso
             } else {
                 return false; // Contraseña incorrecta
@@ -98,7 +103,8 @@ class SessionController {
     }
 
 
-    public static function logout() {
+    public  function logout() {
+
         // Iniciar la sesión si aún no está iniciada
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -107,7 +113,6 @@ class SessionController {
         // Destruir todas las variables de sesión y la sesión en sí
         $_SESSION = [];
         session_destroy();
-
         // Redirigir al login
         header("Location: login");
         exit();
@@ -171,18 +176,20 @@ class SessionController {
 
     }
 
-
-
+    // return token
     public static function isLoggedIn() {
         return self::verifyTokenCookie();
     }
 
 
-    
+    // Verificar si el usuario está logueado
+    public static function checkSession() {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: login"); // Redirige al login si no está logueado
+            exit();
+        }
+    }
 }
-
-
-
-
 
 ?>

@@ -1,32 +1,3 @@
-<?php 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once '../src/controller/SessionController.php';
-
-$message = "";
-$messageType = ""; // Define el tipo de mensaje ('success' o 'danger')
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Llamar al método de registro
-    $sessionController = new SessionController();
-    $result = $sessionController->register($username, $email, $password);
-
-    // Determina el tipo de mensaje según el resultado
-    if ($result === "El usuario ya existe") {
-        $messageType = "danger";  // Rojo para error
-    } else {
-        $messageType = "success"; // Verde para éxito
-    }
-    $message = $result;
-}
-?>
-
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 <head>

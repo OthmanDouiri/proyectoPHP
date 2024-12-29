@@ -1,6 +1,8 @@
 <?php
+//namespace App\Controller;
+//use PDO;
+//use PDOException;
 
-// General singleton class.
 
 class DatabaseController {
 
@@ -46,7 +48,5 @@ class DatabaseController {
               return null;
           }
     }
-
-
 
   }
