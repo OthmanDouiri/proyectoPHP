@@ -42,20 +42,47 @@ switch ($request) {
         break;
     
     case '/update':    // Caso para registro
-        require __DIR__ . $viewDir . 'update.php';
-        break;
-    
-    case '/delete':    // Caso para registro
-            require __DIR__ . $viewDir . 'delete.php';
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                if (isset($_GET['id'])) {
+                    $dashboardController = new DashboardController();
+                    $dashboardController->renderUpdatePage($_GET['id']);
+                } else {
+                    http_response_code(400);
+                    echo "Falta el ID del teléfono.";
+                }
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $dashboardController = new DashboardController();
+                $dashboardController->handleUpdate();
+            }
+            break;
+    case '/create':
+        
+            $dashboardController = new DashboardController();
+        
+            // Render the create page initially
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $dashboardController->renderCreatePage();
+            }
+            
+            // Handle form submission for creating a phone
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $dashboardController->handleCreate();
+            }
             break;
 
     case '/dashboard':   // Caso para el dashboard
-        // Crear una instancia de DashboardController y renderizar el dashboard
-        $sessionController = new SessionController();
-        $sessionController->checkSession();
-        $dashboardController = new DashboardController();
-        $dashboardController->renderDashboard();
-        break;
+                $sessionController = new SessionController();
+                $sessionController->checkSession();
+                $dashboardController = new DashboardController();
+            
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
+                    // Si es una solicitud POST con un ID, manejar la eliminación
+                    $dashboardController->handleDelete();  
+                } else {
+                    // Si no es POST o no tiene un phone_id, renderizamos el dashboard
+                    $dashboardController->renderDashboard();
+                }
+                break;
     
     case '/account':   // Caso para el dashboard
             // Crear una instancia de DashboardController y renderizar el dashboard
