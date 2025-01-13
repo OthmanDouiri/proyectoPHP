@@ -71,6 +71,8 @@ switch ($request) {
             break;
 
     case '/dashboard':   // Caso para el dashboard
+        error_reporting(E_ALL);
+        ini_set('display_errors', 'On');
                 $sessionController = new SessionController();
                 $sessionController->checkSession();
                 $dashboardController = new DashboardController();
@@ -89,6 +91,10 @@ switch ($request) {
             $accountController = new AccountController();
             $accountController->renderAccount();
             break;
+    case '/gettext':   // Caso para el dashboard
+        require __DIR__ . $viewDir . 'gettext.php';
+        break;
+
     default:             // Rutas no definidas
         http_response_code(404);
         require __DIR__ . $viewDir . '404.php';

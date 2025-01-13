@@ -19,6 +19,10 @@
             <label for="price" class="form-label">Precio</label>
             <input type="text" class="form-control" id="price" name="price" value="{{ phone.price }}" required>
         </div>
+        <div class="mb-3">
+            <label for="marca_id" class="form-label">idMarca</label>
+            <input type="numbre" class="form-control" id="marca_id" name="marca_id" value="{{ phone.marca_id }}" required>
+        </div>
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             <a href="/dashboard" class="btn btn-secondary">Cancelar</a>
     </form>

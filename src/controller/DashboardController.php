@@ -22,21 +22,45 @@ class DashboardController {
         // Configurar Twig
         $loader = new FilesystemLoader('../public/templates');
         $this->twig = new Environment($loader);    
+
+         // Añadir la función gettext a Twig
+        /*$this->twig->addFunction(new \Twig\TwigFunction('__', function ($string) {
+            return gettext($string);
+        }));*/
     }
     
+
+    function detectUserLocale() {
+        $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5); // Detecta el idioma principal
+        
+        $supportedLanguages = ['en-US', 'es-ES']; // Idiomas soportados por la app
+        
+
+        // Verifica si el idioma detectado es compatible con los soportados
+        if (in_array($lang, $supportedLanguages)) {
+            return $lang;
+        } else {
+            return 'en-US'; // Idioma predeterminado
+        }
+    }
+
     // Método para obetener phone 
     // actualizamos getPhone para incluit la busqueda
 
     public function getPhone($searchQuery = null){
         try {
             // SQL para seleccionar el teléfono
-            $sql = "SELECT * FROM phone";
+            $sql = "SELECT phone.*, marca.nombre AS marca_nombre 
+                FROM phone 
+                JOIN marca ON phone.marca_id = marca.id";
 
             //Si $searchQuery no es null
             if ($searchQuery) {
                 //Modifica la consulta SQL para filtrar los registros donde el nombre (name) o el precio (price) contengan la cadena proporcionada en $searchQuery.
-                $sql .= " WHERE name LIKE :search OR price LIKE :search";
+                $sql .= " WHERE phone.name LIKE :search OR phone.price LIKE :search OR marca.nombre LIKE :search";
             }
+              // Añadimos el ORDER BY para ordenar por ID
+                $sql .= " ORDER BY phone.id ASC";
             // Preparar la sentencia SQL
             $statement = $this->conn->prepare($sql);
             // 
@@ -56,14 +80,15 @@ class DashboardController {
 
 
     // methode para modificar phone
-    public function modifyPhone($id, $name, $price){
+    public function modifyPhone($id, $name, $price, $marca_id) {
         try {
             // SQL para actualizar el telefono coger el id y modificar el nombre y el precio
-            $sql = "UPDATE phone SET name = :name, price = :price WHERE id = :id";
+            $sql = "UPDATE phone SET name = :name, price = :price , marca_id = :marca_id WHERE id = :id";
             $statement = $this->conn->prepare($sql);
             $statement->bindValue(':id', $id);
             $statement->bindValue(':name', $name);
             $statement->bindValue(':price', $price);
+            $statement->bindValue(':marca_id', $marca_id);
             // Ejecutar la sentencia SQL
             $statement->execute();
         } catch (PDOException $error) {
@@ -92,6 +117,20 @@ class DashboardController {
             }
 
         // Renderizar la vista del dashboard
+        /*$locale = $this->detectUserLocale();
+        $formatLocale = str_replace('-', '_', $locale);
+        print_r($formatLocale);
+        $language = "en";
+        putenv("LC_ALL=$language"); // Define el locale a usar
+        setlocale(LC_ALL, $language);
+        bindtextdomain("messages", "./locale"); // Carpeta de localización
+        textdomain("messages"); // Archivo de texto a usar 
+        
+    
+
+                echo gettext("hello gettext");*/
+                
+        
         echo $this->twig->render('dashboard.html.twig',
         [
             'phones' => $phones ,
@@ -147,10 +186,11 @@ class DashboardController {
             $id = $_POST['id'];// Recuperar los datos del formulario
             $name = $_POST['name'];     
             $price = $_POST['price'];
+            $marca_id = $_POST['marca_id'];
     
-            $this->modifyPhone($id, $name, $price); // Modificar el teléfono en la base de datos
-            // onsublit alert to confirm fisrt and then redirect to dashboard
-        
+            $this->modifyPhone($id, $name, $price, $marca_id); // Modificar el teléfono en la base de datos
+            // onsublit alert to confirme the update
+            
             // Redirigir al dashboard
             header('Location: /dashboard');
             exit();

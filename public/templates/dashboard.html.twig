@@ -15,11 +15,12 @@
         <!-- Formulario para cerrar sesión -->
         <div class="d-flex justify-content-end">
             <form method="POST">
-                <a href="/logout" class="btn btn-dark">Logout</a>
+                <a href="/logout" class="btn btn-dark">Cerrar sesión</a>
             </form>
         </div>
-        <h1>Welcome, {{ username }} !</h1>
-        <p>This is your dashboard.</p>
+        <h1>Bienvienido, {{ username }} !</h1>
+        
+        <p>Este es tu panel de administración.</p>
     </div>
 
 
@@ -56,13 +57,19 @@
         <table class="table table-bordered" 
         data-toggle="table" 
         data-pagination="true" 
-        data-page-size="5" >
+        data-page-size="5"
+        data-locale="es-ES">
+
             <thead class="table-dark">
                 <tr>
                     <th>id</th>
                     <th>Nombre</th>
                     <th>Precio</th>
+                    <!--<th>idMarca</th> -->
+                    <th>Marca</th>
                     <th>Acción</th>
+
+                    
                 </tr>
             </thead>
             <tbody>
@@ -71,6 +78,8 @@
                         <td>{{ phone.id }}</td>
                         <td>{{ phone.name }}</td>
                         <td>{{ phone.price }}</td>
+                         <!--<td>{{ phone.marca_id }}</td>-->
+                        <td>{{ phone.marca_nombre }}</td>
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="update?id={{ phone.id }}" class="btn btn-success">Editar</a>
@@ -89,6 +98,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/locale/bootstrap-table-es-ES.min.js"></script>
+
 
 </body>
 </html>

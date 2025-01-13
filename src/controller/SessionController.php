@@ -143,38 +143,40 @@ class SessionController {
         
     // function verirfyTokenCookie 
     public static function verifyTokenCookie() {
-
-        session_start();
+        // Asegurarse de que la sesión esté iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        // Verificar si existe la cookie 'token'
         if (isset($_COOKIE['token'])) {
             $token = $_COOKIE['token'];
-
+    
+            // Preparar la consulta para verificar el token en la base de datos
             $statement = (new self)->conn->prepare("SELECT id, username FROM User WHERE token = :token");
             $statement->bindValue(":token", $token);
             $statement->setFetchMode(PDO::FETCH_OBJ);
             $statement->execute();
             $user = $statement->fetch();
-
-
+    
+            // Si se encuentra un usuario con el token válido
             if ($user) {
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['username'] = $user->username;
-
                 return true;
-
-
+            } else {
+                // Token inválido: eliminar cookie
+                setcookie("token", "", time() - 3600, "/"); // Expira inmediatamente
+                // Redirigir al login o manejar el error
+                echo "Token inválido!";
+                return false;
+            }
         } else {
-            // Token inválido
-            setcookie("token", "", time() - 3600, "/"); // Eliminar cookie
-            // header("Location: login.php");
-            // exit();
-            echo "Token inválido!";
+            // No existe la cookie 'token'
             return false;
         }
-    } else {
-        return false;
     }
-
-    }
+    
 
     // return token
     public static function isLoggedIn() {
@@ -191,5 +193,17 @@ class SessionController {
         }
     }
 }
+
+
+
+// cookies para mantener al usuario conectado en caso de que cierre el navegador, permitiendo el acceso continuo a la administración.
+// Para ello, necesitamos una función que verifique si el token almacenado en la cookie es válido y, en caso afirmativo, inicie la sesión del usuario.
+// La función verifyTokenCookie() se encarga de verificar si el token almacenado en la cookie es válido.
+// Si el token es válido, se inicia la sesión del usuario y se almacena el ID de usuario y el nombre de usuario en $_SESSION.
+// Si el token no es válido, se elimina la cookie y se redirige al usuario a la página de inicio de sesión.
+// La función isLoggedIn() simplemente llama a verifyTokenCookie() y devuelve el resultado.
+// La función checkSession() se encarga de verificar si el usuario está logueado. Si no lo está, redirige al usuario a la página de inicio de sesión.
+
+
 
 ?>
