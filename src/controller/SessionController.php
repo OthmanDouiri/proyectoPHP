@@ -1,11 +1,13 @@
 <?php
-//namespace App\Controller;
-require_once '../src/controller/DatabaseController.php';
-//require_once '../vendor/autoload.php';
-use Twig\Loader\FilesystemLoader;
-use Twig\Environment;
+namespace App\Controller;
+use App\Controller\DatabaseController;
+use App\model\User;
+use App\utils\JWTUtils;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use PDO;
 use PDOException;
+use Exception;
 
 class SessionController {
     private $conn;
@@ -69,41 +71,47 @@ class SessionController {
 
 
     // methode de sign up 
-    public function login($username, $password) {
-        // Verificar si el usuario existe
-        if (!$this->exist($username)) {
-            return false;
-        }
-
-        try {
-            // SQL para obtener la contraseña del usuario
-            $sql = "SELECT id, password FROM User WHERE username = :username";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':username', $username);
-            $statement->execute();
-
-            // Obtener el usuario
-            $user = $statement->fetch(PDO::FETCH_OBJ);
-
-            // Verificar la contraseña
-            if ($user && password_verify($password, $user->password)) {
-                // Iniciar la sesión del usuario
-                session_start();
-                $_SESSION['user_id'] = $user->id;
-                $_SESSION['username'] = $username;
-                
-                return true; // Inicio de sesión exitoso
+    public function login($username,$password){
+        
+        $userModel = new User($this->conn);
+        $user = $userModel->findByUsername($username);
+               
+        if($user){
+            if(password_verify($password, $user['password'])){
+                $token = JWTUtils::generateJWt($user['id'], $user['username'], $user['role']);
+                $userModel->updateToken($user['id'], $token);
+                 // Store the username in the session
+                 $_SESSION['username'] = $user['username'];
+                // Guardar el token en una cookie
+                setcookie("token", $token, time() + (86400 * 30), "/"); // 86400 segundos en un día * 30 días
+                return ['token' => $token, 'message' => 'Login successful'];
             } else {
-                return false; // Contraseña incorrecta
+                return ['error' => 'Invalid credentials'];
             }
-        } catch (PDOException $error) {
-            echo "Error en la consulta: " . $error->getMessage();
-            return false;
+        } else {
+            return ['error' => 'User not found'];
         }
     }
 
+// logout version 2 
 
-    public  function logout() {
+public function logout() {
+    // Verificar si la sesión está activa
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    // Eliminar todas las variables de sesión
+    $_SESSION = [];
+    // Destruir la sesión
+    session_destroy();
+    // Eliminar la cookie 'token'
+    setcookie("token", "", time() - 3600, "/"); // Expira inmediatamente
+    // Redirigir al login
+    header("Location: login");
+    exit();
+}
+ // logout methode version 1
+    /*public  function logout() {
 
         // Iniciar la sesión si aún no está iniciada
         if (session_status() === PHP_SESSION_NONE) {
@@ -116,7 +124,7 @@ class SessionController {
         // Redirigir al login
         header("Location: login");
         exit();
-    }
+    }*/
     
     // vamos a hacer una función para generar token
 
@@ -192,17 +200,69 @@ class SessionController {
             exit();
         }
     }
+
+
+
+
+
+    //funcion is loggedin actualizado por jwt 
+
+    public static function isAuthenticated() {
+        // Verificar si el token está en las cookies
+        if (isset($_COOKIE['token'])) {
+            $token = $_COOKIE['token'];
+
+            try {
+                // Decodificar el token usando la clave secreta
+                $decoded = JWT::decode($token, new Key('my_secret_key', 'HS256'));
+    
+                // Validar si el token sigue siendo válido
+                if ($decoded && isset($decoded->userId)) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                // Si el token no es válido
+                error_log($e->getMessage());
+                return false;
+            }
+        }
+        return false; // Si no hay token, el usuario no está autenticado
+    }
+
+    // Verificar si el usuario está logueado
+        public static function check() {
+            session_start();
+
+            if (!SessionController::isAuthenticated()) {
+                header("Location: /login");
+                exit();
+            }
+        }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
 
-// cookies para mantener al usuario conectado en caso de que cierre el navegador, permitiendo el acceso continuo a la administración.
-// Para ello, necesitamos una función que verifique si el token almacenado en la cookie es válido y, en caso afirmativo, inicie la sesión del usuario.
-// La función verifyTokenCookie() se encarga de verificar si el token almacenado en la cookie es válido.
-// Si el token es válido, se inicia la sesión del usuario y se almacena el ID de usuario y el nombre de usuario en $_SESSION.
-// Si el token no es válido, se elimina la cookie y se redirige al usuario a la página de inicio de sesión.
-// La función isLoggedIn() simplemente llama a verifyTokenCookie() y devuelve el resultado.
-// La función checkSession() se encarga de verificar si el usuario está logueado. Si no lo está, redirige al usuario a la página de inicio de sesión.
+
+
+
+
+
+
 
 
 

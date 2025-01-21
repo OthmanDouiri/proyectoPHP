@@ -1,8 +1,9 @@
 <?php 
-require_once '../src/controller/SessionController.php';
-require_once '../src/controller/DatabaseController.php';
-//namespace App\Controller;
-
+//require_once '../src/controller/SessionController.php';
+//require_once '../src/controller/DatabaseController.php';
+namespace App\Controller;
+use App\Controller\SessionController;
+use App\Controller\DatabaseController;
 
 require_once '../vendor/autoload.php';
 use Twig\Loader\FilesystemLoader;
@@ -23,10 +24,7 @@ class DashboardController {
         $loader = new FilesystemLoader('../public/templates');
         $this->twig = new Environment($loader);    
 
-         // Añadir la función gettext a Twig
-        /*$this->twig->addFunction(new \Twig\TwigFunction('__', function ($string) {
-            return gettext($string);
-        }));*/
+      
     }
     
 
@@ -114,22 +112,7 @@ class DashboardController {
             $noResultsMessage = null;
             if ($searchQuery && empty($phones)) {
                 $noResultsMessage = "No se encontraron resultados para '$searchQuery'.";
-            }
-
-        // Renderizar la vista del dashboard
-        /*$locale = $this->detectUserLocale();
-        $formatLocale = str_replace('-', '_', $locale);
-        print_r($formatLocale);
-        $language = "en";
-        putenv("LC_ALL=$language"); // Define el locale a usar
-        setlocale(LC_ALL, $language);
-        bindtextdomain("messages", "./locale"); // Carpeta de localización
-        textdomain("messages"); // Archivo de texto a usar 
-        
-    
-
-                echo gettext("hello gettext");*/
-                
+            }                
         
         echo $this->twig->render('dashboard.html.twig',
         [
@@ -233,6 +216,7 @@ class DashboardController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
             $price = $_POST['price'];
+            
             $this->createPhone($name, $price);  
             echo $this->twig->render('create.html.twig', [
                 'successMessage' => 'El teléfono fue creado exitosamente.',

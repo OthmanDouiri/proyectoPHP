@@ -1,7 +1,7 @@
 <?php
-//namespace App\Controller;
-//use PDO;
-//use PDOException;
+namespace App\Controller;
+use PDO;
+use PDOException;
 
 
 class DatabaseController {

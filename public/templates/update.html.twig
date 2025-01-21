@@ -21,7 +21,17 @@
         </div>
         <div class="mb-3">
             <label for="marca_id" class="form-label">idMarca</label>
-            <input type="numbre" class="form-control" id="marca_id" name="marca_id" value="{{ phone.marca_id }}" required>
+            <input type="numbre" class="form-control" id="marca_id" name="marca_id" value="{{ phone.marca_id }}"  disabled>
+        </div>
+
+        <div class="mb-3">
+            <label for="marca_id" class="form-label">Marca</label>
+            <select class="form-select" id="marca_id" name="marca_id" required>
+                <option value="1" {% if phone.marca_id == 1 %}selected{% endif %}>Apple</option>
+                <option value="2" {% if phone.marca_id == 2 %}selected{% endif %}>Samsung</option>
+                <option value="3" {% if phone.marca_id == 3 %}selected{% endif %}>Xiaomi</option>
+                <option value="4" {% if phone.marca_id == 4 %}selected{% endif %}>Google</option>
+            </select>
         </div>
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             <a href="/dashboard" class="btn btn-secondary">Cancelar</a>

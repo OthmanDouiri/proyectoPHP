@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once '../src/controller/SessionController.php';
+use App\Controller\SessionController;
 
 $message = "";
 $messageType = ""; // Define el tipo de mensaje ('success' o 'danger')
