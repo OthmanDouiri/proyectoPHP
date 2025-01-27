@@ -1,54 +1,43 @@
 <?php
 
+// Requerir controladores y autoload de Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
-
-require_once '../src/controller/DatabaseController.php';
-require_once '../src/controller/DashboardController.php';
-require_once '../src/controller/SessionController.php';
-require_once '../src/controller/HomeController.php';
 use App\Controller\HomeController;
-
-
-
-
-
-require_once __DIR__ . '../../vendor/autoload.php';
 use App\Controller\DashboardController;
 use App\Controller\SessionController;
 use App\Middleware\AuthMiddleware;
-
+use App\Controller\ErrorController;
 
 // Extraer la ruta base sin parámetros de consulta
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Eliminar posibles barras al final de la ruta
 $request = rtrim($request, '/');
-// Directorio base para las vistas (home, 404, etc.)
+
+// Directorio base para las vistas
 $viewDir = '/views/';
 
-
 // Verificar la solicitud y redirigir según el caso
-
 switch ($request) {
-    case '':            // Caso de raíz de URL
+    case '': // Página raíz
     case '/':
-    
-    case '/home':      // Caso para 
+    case '/home': // Página principal
         $homeController = new HomeController();
         $homeController->renderHome();
         break;
-    
 
-    case '/login':      // Caso para login
-        require __DIR__ . $viewDir . 'login.php';
+    case '/login': // Página de inicio de sesión
+        $sessionController = new SessionController();
+        $sessionController->handleLogin();
         break;
 
-    case '/logout':     // Caso para logout
+    case '/logout': // Acción de cierre de sesión
         $sessionController = new SessionController();
         $sessionController->logout();
         break;
 
-    case '/api/login':
+    case '/api/login': // API de inicio de sesión
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = json_decode(file_get_contents('php://input'), true);
             $sessionController = new SessionController();
@@ -57,19 +46,20 @@ switch ($request) {
         }
         break;
 
-    case '/api/protected':
-        AuthMiddleware::protectRoute($request, function($request, $userData) {
+    case '/api/protected': 
+        // Ruta protegida con middleware
+            AuthMiddleware::protectRoute($request, function ($request, $userData) {
             $dashboardController = new DashboardController();
-            // Your protected route logic here
             echo json_encode(['message' => 'This is a protected route', 'user' => $userData]);
         });
         break;
 
-    case '/register':    // Caso para registro
-        require __DIR__ . $viewDir . 'register.php';
+    case '/register': // Página de registro
+        $sessionController = new SessionController();
+        $sessionController->handleRegister();
         break;
-    
-    case '/update':      // Caso para actualizar
+
+    case '/update': // Actualización de datos
         SessionController::check();
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (isset($_GET['id'])) {
@@ -85,7 +75,7 @@ switch ($request) {
         }
         break;
 
-    case '/create':      // Caso para crear
+    case '/create': // Creación de datos
         SessionController::check();
         $dashboardController = new DashboardController();
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -96,19 +86,27 @@ switch ($request) {
         }
         break;
 
-    case '/dashboard':   // Caso para el dashboard
+    case '/dashboard': // Página del dashboard
         SessionController::check();
         $dashboardController = new DashboardController();
-        $dashboardController->renderDashboard();
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
+            // Si es una solicitud POST con un ID, manejar la eliminación
+            $dashboardController->handleDelete();  
+        } else {
+            // Si no es POST o no tiene un phone_id, renderizamos el dashboard
+            $dashboardController->renderDashboard();
+        }
         break;
 
-    case '/gettext':     // Caso para gettext
+    case '/gettext': // Página para gettext
         require __DIR__ . $viewDir . 'gettext.php';
         break;
 
-    default:             // Rutas no definidas
+    default: // Página no encontrada (404)
         http_response_code(404);
-        require __DIR__ . $viewDir . '404.php';
-        break;      
+        $errorController = new ErrorController();
+        $errorController->render404();
+        break;
+        break;
 }
-?>

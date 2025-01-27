@@ -21,7 +21,7 @@ class DashboardController {
     public function __construct() {
         $this->conn = DatabaseController::connect();
         // Configurar Twig
-        $loader = new FilesystemLoader('../public/templates');
+        $loader = new FilesystemLoader(__DIR__ . '/../../templates');
         $this->twig = new Environment($loader);    
 
       
@@ -196,16 +196,18 @@ class DashboardController {
             $this->deletePhone($id);
             header('Location: /dashboard');
             exit();
-    }
+        }
 
-    //-----------------create phone----------------------------------------------
+    //-----------------create phone-----------------------------            $sql = "UPDATE phone SET name = :name, price = :price , marca_id = :marca_id WHERE id = :id";
 
-    public function createPhone($name, $price) {
+    public function createPhone($name, $price,$marca_id,$image_url) {
         try {
-            $sql = "INSERT INTO phone (name, price) VALUES (:name, :price)";
+            $sql = "INSERT INTO phone (name, price , marca_id , image_url ) VALUES (:name, :price , :marca_id , :image_url)";
             $statement = $this->conn->prepare($sql);
             $statement->bindValue(':name', $name);
             $statement->bindValue(':price', $price);
+            $statement->bindValue(':marca_id', $marca_id);
+            $statement->bindValue(':image_url',$image_url);
             $statement->execute();
         } catch (PDOException $error) {
             echo "Error: " . $error->getMessage();
@@ -216,8 +218,10 @@ class DashboardController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
             $price = $_POST['price'];
+            $marca_id = $_POST['marca_id'];
+            $image_url = $_POST['image_url'];
             
-            $this->createPhone($name, $price);  
+            $this->createPhone($name, $price, $marca_id, $image_url);  
             echo $this->twig->render('create.html.twig', [
                 'successMessage' => 'El teléfono fue creado exitosamente.',
             ]);

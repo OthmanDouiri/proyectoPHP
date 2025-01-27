@@ -8,6 +8,8 @@ use Firebase\JWT\Key;
 use PDO;
 use PDOException;
 use Exception;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
 
 class SessionController {
     private $conn;
@@ -18,20 +20,14 @@ class SessionController {
     }
 
     // Verificar si el usuario ya existe en la base de datos
-    public function exist($username, $email = null) {
+    public function exist($email) {
         try {
-            if ($email === null) {
-                // SQL para seleccionar el usuario por nombre de usuario
-                $sql = "SELECT * FROM User WHERE username = :username";
-                $statement = $this->conn->prepare($sql);
-                $statement->bindValue(':username', $username);
-            } else {
+            
                 // SQL para seleccionar el usuario por nombre de usuario y correo electrónico
-                $sql = "SELECT * FROM User WHERE username = :username AND email = :email";
+                $sql = "SELECT * FROM User WHERE email = :email";
                 $statement = $this->conn->prepare($sql);
-                $statement->bindValue(':username', $username);
                 $statement->bindValue(':email', $email);
-            }
+            
             // Ejecutar la sentencia SQL
             $statement->execute();
             // Verificar si se obtuvo algún resultado
@@ -45,8 +41,8 @@ class SessionController {
     // Registrar nuevo usuario
     public function register($username, $email, $password) {
         // Verificar si el usuario ya existe
-        if ($this->exist($username, $email)) {
-            return "El usuario ya existe";
+        if ($this->exist($email)) {
+            return ['success' => false, 'error' => 'El usuario ya existe'];
         } else {
             try {
                 // SQL para insertar un nuevo usuario en la base de datos
@@ -62,9 +58,9 @@ class SessionController {
                 // Ejecutar la sentencia SQL
                 $statement->execute();
 
-                return "Usuario registrado correctamente";
+                return ['success' => true];
             } catch (PDOException $error) {
-                return "Error: " . $error->getMessage();
+                return ['error' => false, 'error' => $error->getMessage()];
             }
         }
     }
@@ -242,17 +238,86 @@ public function logout() {
 
 
 
+        public function handleLogin() {
+            // Inicia la sesión
+            session_start();
+    
+            // Verifica si el usuario ya está logueado
+            if (isset($_SESSION['user_id'])) {
+                header("Location: /dashboard"); // Redirige al dashboard si ya está logueado
+                exit();
+            }
+    
+            // Configurar Twig
+            $loader = new FilesystemLoader(__DIR__ . '/../../templates');
+            $twig = new Environment($loader);
+    
+            // Maneja el inicio de sesión del usuario
+            $error = null;
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+    
+                // Llama al método de inicio de sesión
+                $loginResult = $this->login($username, $password);
+    
+                if (isset($loginResult['token'])) {
+                    // Guarda el token en la sesión
+                    $_SESSION['token'] = $loginResult['token'];
+    
+                    // Check if headers are already sent
+                    if (headers_sent()) {
+                        echo "Headers already sent!";
+                        die();
+                    }
+                    // Redirige al dashboard si el inicio de sesión es exitoso
+                    header("Location: /dashboard");
+                    exit();
+                } else {
+                    // Maneja el error de inicio de sesión
+                    $error = "Usuario o contraseña incorrectos.";
+                }
+            }
+    
+            // Renderiza la plantilla de Twig
+            echo $twig->render('login.html.twig', ['error' => $error]);
+        }
 
 
+        // Maneja el registro del usuario
+       public function handleRegister() {
+        // Inicia la sesión
+        session_start();
 
+        // Configurar Twig
+        $loader = new FilesystemLoader(__DIR__ . '/../../templates');
+        $twig = new Environment($loader);
 
+        // Maneja el registro del usuario
+        $message = null;
+        $messageType = 'danger';
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
+            // Llama al método de registro
+            $registerResult = $this->register($username, $email, $password);
 
+            if ($registerResult['success']) {
+                $message = "Registro exitoso. Por favor, inicia sesión.";
+            } else {
+                $error = "Error en el registro: " . $registerResult['error'];
+            }
+        }
 
+        // Renderiza la plantilla de Twig
+        echo $twig->render('register.html.twig', [
+            'message' => $message,
+        ]);
+    }
 
-
-
-
+        
 }
 
 

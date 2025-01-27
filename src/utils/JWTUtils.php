@@ -18,7 +18,7 @@ private static $key = "my_secret_key";
 public static function generateJWt($userId,$username,$role){
 
  $payload = [
-    'iss' => 'auth.local',
+    'iss' => 'proyectophp.local',
     'iat' => time(),
     'exp' => time() + (60 * 60 * 24 * 7), // 7 days
     'userId' => $userId,
