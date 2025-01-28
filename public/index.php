@@ -89,7 +89,7 @@ switch ($request) {
     case '/dashboard': // Página del dashboard
         SessionController::check();
         $dashboardController = new DashboardController();
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
             // Si es una solicitud POST con un ID, manejar la eliminación
             $dashboardController->handleDelete();  
@@ -97,6 +97,8 @@ switch ($request) {
             // Si no es POST o no tiene un phone_id, renderizamos el dashboard
             $dashboardController->renderDashboard();
         }
+
+
         break;
 
     case '/gettext': // Página para gettext

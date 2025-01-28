@@ -101,25 +101,30 @@ class DashboardController {
             session_start(); // Assurez-vous que la session est démarrée
         }
 
+        $data = $this->graficHightChart();
+
         // actualizar  para manejar busqueda
         $searchQuery = isset($_GET['search']) ? $_GET['search'] : null ;
 
         // Obtener los teléfonos según la búsqueda
         $phones = $this->getPhone($searchQuery);
         $username = htmlspecialchars($_SESSION['username']);
-        
+        $usernameUppercase = strtoupper($username);
         // Mensaje si no hay resultados
             $noResultsMessage = null;
             if ($searchQuery && empty($phones)) {
                 $noResultsMessage = "No se encontraron resultados para '$searchQuery'.";
             }                
         
+        
+
         echo $this->twig->render('dashboard.html.twig',
         [
             'phones' => $phones ,
-            'username' => $username,
+            'username' => $usernameUppercase,
             'search_query' => $searchQuery,
-            'noResultsMessage' => $noResultsMessage
+            'noResultsMessage' => $noResultsMessage,
+            'chartData' => $data,
         ],
         );
     }
@@ -231,6 +236,54 @@ class DashboardController {
     public function renderCreatePage() {
         echo $this->twig->render('create.html.twig');
     }
+
+
+
+    //Método para obtener los datos de la base de datos y generar el gráfico de la librería Highcharts
+
+    public function graficHightChart()
+    {
+        // Consulta SQL con JOIN para obtener el nombre de cada marca
+        $query = "
+            SELECT m.nombre AS nombre_marca, COUNT(*) AS total
+            FROM phone p
+            JOIN marca m ON p.marca_id = m.id
+            GROUP BY m.nombre
+        ";
+    
+        $stmt = $this->conn->prepare($query); // Preparar la consulta
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Calcular el porcentaje de cada marca
+        $totalPhones = array_sum(array_column($result, 'total'));   // Sumar el total de teléfonos
+        $data = []; // Array para almacenar los datos del gráfico
+
+     // Iterar sobre los resultados para calcular el porcentaje de cada marca
+        foreach ($result as $row) { 
+            $percentage = round(($row['total'] / $totalPhones) * 100, 2); // Calcular el porcentaje // Redondear a 2 decimales
+            $data[] = [
+                'name' => $row['nombre_marca'] . " ({$row['total']} teléfonos)", // Usamos el nombre real de la marca
+                'y' => $percentage
+            ];
+        }
+
+        return json_encode($data); // Devolver los datos en formato JSON ( render el la funcion renderDashboard)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

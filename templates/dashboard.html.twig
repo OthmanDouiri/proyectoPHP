@@ -50,9 +50,7 @@
 					class="container mt-5">
 					<!-- Formulario para cerrar sesión -->
 
-					<h1>Bienvienido,
-						{{ username }}
-						!</h1>
+					<h1>Bienvienido, <strong class="text-success">{{ username }}!</strong></h1>
 
 					<p>Este es tu panel de administración.</p>
 				</div>
@@ -118,9 +116,8 @@
 
 
 				<div class="container mt-5">
-					<h2>Estadísticas</h2>
-					<canvas id="priceChart" width="400" height="200"></canvas>
-					<canvas id="brandChart" width="400" height="200" class="mt-4"></canvas>
+					<h1>Estadísticas</h1>
+					<div id="brandPieChart" style="width: 800px; height: 400px; margin: 0 auto;" class="mt-4"></div>
 				</div>
 
 
@@ -129,10 +126,48 @@
 				<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.js"></script>
 				<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/locale/bootstrap-table-es-ES.min.js"></script>
 
-				<!--script para librerias de chart.js -->
+				<!--script para la biblioteca de Highcharts -->
+				<script src="https://code.highcharts.com/highcharts.js"></script>
+				
+				<script>
+						document.addEventListener('DOMContentLoaded', function () {
+							const chartData = {{ chartData|raw }}  // Recibir datos del controlador
+							console.log(chartData); // Debugging: Check the chartData in the console
 
+							Highcharts.chart('brandPieChart', {
+								chart: {
+									type: 'pie'
+								},
+								title: {
+									text: 'Distribución de marcas de móviles'
+								},
+								tooltip: {
+									pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+								},
+								accessibility: {
+									point: {
+										valueSuffix: '%'
+									}
+								},
+								plotOptions: {
+									pie: {
+										allowPointSelect: true,
+										cursor: 'pointer',
+										dataLabels: {
+											enabled: true,
+											format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+										}
+									}
+								},
+								series: [{
+									name: 'Porcentaje',
+									colorByPoint: true,
+									data: chartData
+								}]
+							});
+						});
+				</script>
 
-			</body>
 		</html>
 	</body>
 </html>
