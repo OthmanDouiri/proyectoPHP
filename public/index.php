@@ -1,13 +1,39 @@
-<?php
+<?php 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Requerir controladores y autoload de Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+
+// -------------- i18n block----------------s
+// Initialize Twig
+$twig = require __DIR__ . '/../config/twig.php';
+
+// Initialize i18n
+$translations = require __DIR__ . '/../config/i18n.php';
+
+
+// Add translations to Twig globals 
+
+/* we use this to make the translations available in all templates */
+$twig->addGlobal('translations', $translations);
+
+
+// -------------------i18n fin--------------------------
+
+
+//File to include the translation service and use it for translations:
+
 use App\Controller\HomeController;
 use App\Controller\DashboardController;
 use App\Controller\SessionController;
-use App\Middleware\AuthMiddleware;
 use App\Controller\ErrorController;
+use App\Controller\API\PhoneAPI;
+use App\Middleware\AuthMiddleware;
+
+
 
 // Extraer la ruta base sin parámetros de consulta
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -18,97 +44,141 @@ $request = rtrim($request, '/');
 // Directorio base para las vistas
 $viewDir = '/views/';
 
-// Verificar la solicitud y redirigir según el caso
-switch ($request) {
-    case '': // Página raíz
-    case '/':
-    case '/home': // Página principal
-        $homeController = new HomeController();
-        $homeController->renderHome();
-        break;
+// Verificar si la solicitud es para la API
+if (strpos($request, '/api') === 0) {
+    //To protect API requests for only users who can log in,
+    //wee use the AuthMiddleware class to validate the JWT token.
+    AuthMiddleware::protectRoute();
 
-    case '/login': // Página de inicio de sesión
-        $sessionController = new SessionController();
-        $sessionController->handleLogin();
-        break;
+    // Rutas de la API
+    switch ($request) {
 
-    case '/logout': // Acción de cierre de sesión
-        $sessionController = new SessionController();
-        $sessionController->logout();
-        break;
-
-    case '/api/login': // API de inicio de sesión
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $sessionController = new SessionController();
-            $response = $sessionController->login($data['username'], $data['password']);
-            echo json_encode($response);
-        }
-        break;
-
-    case '/api/protected': 
-        // Ruta protegida con middleware
-            AuthMiddleware::protectRoute($request, function ($request, $userData) {
-            $dashboardController = new DashboardController();
-            echo json_encode(['message' => 'This is a protected route', 'user' => $userData]);
-        });
-        break;
-
-    case '/register': // Página de registro
-        $sessionController = new SessionController();
-        $sessionController->handleRegister();
-        break;
-
-    case '/update': // Actualización de datos
-        SessionController::check();
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (isset($_GET['id'])) {
-                $dashboardController = new DashboardController();
-                $dashboardController->renderUpdatePage($_GET['id']);
-            } else {
-                http_response_code(400);
-                echo "Falta el ID del teléfono.";
+        // Ruta para obtener todos los teléfonos
+        case '/api/phones':
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $phoneAPI = new PhoneAPI();
+                $searchQuery = isset($_GET['search']) ? $_GET['search'] : null;
+                $phones = $phoneAPI->getPhones($searchQuery);
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Ruta para crear un teléfono
+                $data = json_decode(file_get_contents('php://input'), true);
+                if (isset($data['name'], $data['price'], $data['marca_id'], $data['image_url'])) {
+                    $phoneAPI = new PhoneAPI();
+                    $response = $phoneAPI->createPhone($data['name'], $data['price'], $data['marca_id'], $data['image_url']);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Missing required fields'
+                    ]);
+                }
             }
-        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            break;
+
+        // Ruta para obtener un teléfono específico por ID
+        case (preg_match('/^\/api\/phones\/\d+$/', $request) ? true : false):
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $id = basename($request);
+                $phoneAPI = new PhoneAPI();
+                $phone = $phoneAPI->getPhoneById($id);
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                // Ruta para actualizar un teléfono completamente
+                $id = basename($request);
+                $data = json_decode(file_get_contents('php://input'), true);
+                if (isset($data['name'], $data['price'], $data['marca_id'], $data['image_url'])) {
+                    $phoneAPI = new PhoneAPI();
+                    $response = $phoneAPI->updatePhone($id, $data['name'], $data['price'], $data['marca_id'], $data['image_url']);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Missing required fields'
+                    ]);
+                }
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+                // Ruta para actualizar parcialmente un teléfono
+                $id = basename($request);
+                $data = json_decode(file_get_contents('php://input'), true);
+                $phoneAPI = new PhoneAPI();
+                $response = $phoneAPI->partialUpdatePhone($id, $data);
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                // Ruta para eliminar un teléfono
+                $id = basename($request);
+                $phoneAPI = new PhoneAPI();
+                $response = $phoneAPI->deletePhone($id);
+            }
+            break;
+
+        // Si la ruta no existe en la API
+        default:
+            http_response_code(404);
+            echo json_encode(['error' => 'API route not found']);
+            break;
+    }
+} else {
+    // Resto de las rutas (no API)
+    switch ($request) {
+        case '': // Página raíz
+        case '/':
+        case '/home': // Página principal
+            $homeController = new HomeController($twig);
+            $homeController->renderHome();
+            break;
+
+        case '/login': // Página de inicio de sesión
+            $sessionController = new SessionController();
+            $sessionController->handleLogin();
+            break;
+
+        case '/logout': // Acción de cierre de sesión
+            $sessionController = new SessionController();
+            $sessionController->logout();
+            break;
+
+        case '/register': // Página de registro
+            $sessionController = new SessionController();
+            $sessionController->handleRegister();
+            break;
+
+        case '/update': // Actualización de datos
+            SessionController::check();
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                if (isset($_GET['id'])) {
+                    $dashboardController = new DashboardController();
+                    $dashboardController->renderUpdatePage($_GET['id']);
+                } else {
+                    http_response_code(400);
+                    echo "Falta el ID del teléfono.";
+                }
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $dashboardController = new DashboardController();
+                $dashboardController->handleUpdate();
+            }
+            break;
+
+        case '/create': // Creación de datos
+            SessionController::check();
             $dashboardController = new DashboardController();
-            $dashboardController->handleUpdate();
-        }
-        break;
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $dashboardController->renderCreatePage();
+            }
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $dashboardController->handleCreate();
+            }
+            break;
 
-    case '/create': // Creación de datos
-        SessionController::check();
-        $dashboardController = new DashboardController();
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $dashboardController->renderCreatePage();
-        }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $dashboardController->handleCreate();
-        }
-        break;
+        case '/dashboard': // Página del dashboard
+            SessionController::check();
+            $dashboardController = new DashboardController();
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
+                $dashboardController->handleDelete();
+            } else {
+                $dashboardController->renderDashboard();
+            }
+            break;
 
-    case '/dashboard': // Página del dashboard
-        SessionController::check();
-        $dashboardController = new DashboardController();
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
-            // Si es una solicitud POST con un ID, manejar la eliminación
-            $dashboardController->handleDelete();  
-        } else {
-            // Si no es POST o no tiene un phone_id, renderizamos el dashboard
-            $dashboardController->renderDashboard();
-        }
-
-
-        break;
-
-    case '/gettext': // Página para gettext
-        require __DIR__ . $viewDir . 'gettext.php';
-        break;
-
-    default: // Página no encontrada (404)
-        http_response_code(404);
-        $errorController = new ErrorController();
-        $errorController->render404();
-        break;
-        break;
+        default: // Página no encontrada (404)
+            http_response_code(404);
+            $errorController = new ErrorController();
+            $errorController->render404();
+            break;
+    }
 }

@@ -1,203 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Agency - Phone</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="/assets/css/homeStyles.css" rel="stylesheet" />
-    </head>
-    <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand" href="#page-top">Phone Phony</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars ms-1"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>                   
-                        <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>                   
-                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Masthead-->
-        <header class="masthead">
-            <div class="container">
-                <div class="masthead-subheading">¡Bienvenidos a nuestra Tienda!</div>
-                <div class="masthead-heading text-uppercase">Encantados de conoceros.</div>
-                <a class="btn btn-primary btn-xl text-uppercase" href="#services">Cuéntame más</a>
-            </div>
-        </header>
-        <!-- Services-->
-        <section class="page-section" id="services">
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-heading text-uppercase">Servicios</h2>
-                    <h3 class="section-subheading text-muted">Ofrecemos un servicio de entrega confiable y rápido en cualquier lugar del país. Recibe tu pedido en el menor tiempo posible.</h3>
-                </div>
-                <div class="row text-center d-flex justify-content-center">
-                    <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="my-3">Pago Contra Entrega (COD)</h4>
-                        <p class="text-muted">Compra sin preocupaciones. Paga solo cuando recibas tu producto en la puerta de tu casa.</p>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="my-3">Compra 100% Segura</h4>
-                        <p class="text-muted">Protegemos tus datos personales y garantizamos que recibirás exactamente lo que compraste.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-
-        <!-- Phone Products-->
-        <section class="page-section bg-light" id="products">
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-heading text-uppercase">Nuestros Productos</h2>
-                    <h3 class="section-subheading text-muted">Explora nuestra amplia gama de teléfonos móviles.</h3>
-                </div>
-
-                    <div class="container my-5">
-                        <h1 class="text-center mb-4">Phones</h1>
-                        <div class="row row-cols-1 row-cols-md-3 g-4">
-                            {% for phone in phones %}
-                            <div class="col">
-                                <div class="card h-100">
-                                    <img src="{{ phone.image_url }}" class="card-img-top" alt="{{ phone.name }}" style="object-fit: cover;">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ phone.name }}</h5>
-                                        <p class="card-text text-muted">Price: ${{ phone.price }}</p>
-                                    </div>
-                                    <div class="card-footer text-center">
-                                        <a href="#" class="btn btn-primary">Buy Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                   </div>
-            </div>
-        </section>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+		<meta name="description" content=""/>
+		<meta name="author" content=""/>
+		<title>Agency - Phone</title>
+		<link
+		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+		<!-- Favicon-->
+		<link
+		rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+		<!-- Font Awesome icons (free version)-->
+		<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+		<!-- Google fonts-->
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+		<link
+		href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css"/>
+		<!-- Core theme CSS (includes Bootstrap)-->
+		<link href="/assets/css/homeStyles.css" rel="stylesheet"/>
 
 
+	</head>
+	<body
+		id="page-top">
+		<!-- Navigation-->
+		<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+			<div class="container">
+				<a class="navbar-brand" href="#page-top">Phone Phony</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+					Menu
+					<i class="fas fa-bars ms-1"></i>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+						<li class="nav-item">
+							<a class="nav-link" href="#services">{{ translations['Servicios'] }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#products">{{ translations['Productos'] }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#about">{{ translations['Acerca'] }}</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/login">{{ translations['Iniciar sesión'] }}</a>
+						</li>
 
+						<!-- Dropdown para seleccionar idioma -->
+						<div class="">
+							<li class="nav-item dropdown bg-light br-15">
+								<a class="nav-link dropdown-toggle text-dark" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="fas fa-language fa-lg text-primary"></i>
 
-        <!-- About-->
-        <section class="page-section" id="about">
-            <div class="container py-5">
-                <div class="row text-center mb-5">
-                  <div class="col-lg-12">
-                    <h2 class="section-heading text-uppercase">Acerca de Nosotros</h2>
-                    <p class="text-muted mt-3">Descubre quiénes somos y por qué somos tu mejor opción.</p>
-                  </div>
-                </div>
-              
-                <!-- Primera sección con imagen -->
-                <div class="row align-items-center mb-5">
-                  <div class="col-lg-6">
-                    <h3 class="fw-bold">¿Quiénes Somos?</h3>
-                    <p>
-                      Somos <strong>Phone Phony</strong>, una empresa dedicada a ofrecer los mejores teléfonos móviles del mercado. Nos hemos esforzado por combinar tecnología de calidad con un servicio confiable.
-                    </p>
-                    <p>
-                      Nos enorgullece ser una referencia en el mercado tecnológico, con miles de clientes satisfechos en todo el país.
-                    </p>
-                  </div>
-                  <div class="col-lg-6">
-                    <!-- Espacio para foto -->
-                    <img src="/assets/img/expressive-young-woman-posing-studio.jpg" alt="Quiénes Somos" class="img-fluid rounded shadow">
-                  </div>
-                </div>
-              
-                <!-- Segunda sección con imagen -->
-                <div class="row align-items-center mb-5">
-                  <div class="col-lg-6 order-lg-2">
-                    <h3 class="fw-bold">Nuestra Misión</h3>
-                    <p>
-                      Facilitar el acceso a la tecnología más avanzada, asegurando una experiencia de compra simple, segura y accesible para todos.
-                    </p>
-                    <p>
-                      Nos enfocamos en satisfacer las necesidades de nuestros clientes con productos confiables y precios competitivos.
-                    </p>
-                  </div>
-                  <div class="col-lg-6 order-lg-1">
-                    <!-- Espacio para foto -->
-                    <img src="/assets/img/business-strategy-success-target-goals.jpg" alt="Nuestra Misión" class="img-fluid rounded shadow">
-                  </div>
-                </div>
-              
-                <!-- Tercera sección con lista y foto -->
-                <div class="row align-items-center mb-5">
-                  <div class="col-lg-6">
-                    <h3 class="fw-bold">Por Qué Elegirnos</h3>
-                    <ul class="list-unstyled">
-                      <li>✔️ <strong>Calidad Garantizada:</strong> Trabajamos solo con marcas reconocidas.</li>
-                      <li>✔️ <strong>Pago Contra Entrega:</strong> Paga solo cuando recibas el producto.</li>
-                      <li>✔️ <strong>Atención al Cliente:</strong> Estamos aquí para ti 24/7.</li>
-                      <li>✔️ <strong>Precios Competitivos:</strong> Tecnología al alcance de todos.</li>
-                    </ul>
-                  </div>
-                  <div class="col-lg-6">
-                    <!-- Espacio para foto -->
-                    <img src="/assets/img/woman-choosing-phone-technology-store.jpg" alt="Por Qué Elegirnos" class="img-fluid rounded shadow">
-                  </div>
-                </div>
-              
-                <!-- Contacto -->
-                
-              </div>
-        </section>
-      
-      
-        
-        <!-- Footer-->
-        <footer class="footer py-4">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-4 text-lg-start">Copyright &copy;Phone Phony</div>
-                    <div class="col-lg-4 my-3 my-lg-0">
-                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    </div>
-                    <div class="col-lg-4 text-lg-end">
-                        <a class="link-dark text-decoration-none me-3" href="#!">Privacy Policy</a>
-                        <a class="link-dark text-decoration-none" href="#!">Terms of Use</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        
-       
-       
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="/assets/js/scripts.js"></script>
-        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-    </body>
-</html>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+									<li>
+										<a class="dropdown-item" href="?lang=es">
+											<img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg" alt="Español" style="width: 20px; margin-right: 5px;">
+											Español
+										</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="?lang=en">
+											<img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="English" style="width: 20px; margin-right: 5px;">
+											English
+										</a>
+									</li>
+
+								</ul>
+							</li>
+						</li>
+					</div>
+
+				</ul>
+			</div>
+		</div>
+	</body>
+</html></nav><!-- Masthead--><header class="masthead">
+<div class="container">
+	<div class="masthead-subheading">{{ translations['Bienvenidos a nuestra Tienda!'] }}</div>
+	<div class="masthead-heading text-uppercase">{{ translations['Encantados de conoceros'] }}</div>
+	<a class="btn btn-primary btn-xl text-uppercase" href="#services">{{ translations['Cuéntame más'] }}</a>
+</div></header><!-- Services--><section class="page-section" id="services">
+<div class="container">
+	<div class="text-center">
+		<h2 class="section-heading text-uppercase">{{ translations['Servicios'] }}</h2>
+		<h3 class="section-subheading text-muted">{{ translations['Ofrecemos un servicio de entrega confiable y rápido en cualquier lugar del país. Recibe tu pedido en el menor tiempo posible.'] }}</h3>
+	</div>
+	<div class="row text-center d-flex justify-content-center">
+		<div class="col-md-4">
+			<span class="fa-stack fa-4x">
+				<i class="fas fa-circle fa-stack-2x text-primary"></i>
+				<i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+			</span>
+			<h4 class="my-3">{{ translations['Pago Contra Entrega (COD)'] }}</h4>
+			<p class="text-muted">{{ translations['Compra sin preocupaciones. Paga solo cuando recibas tu producto en la puerta de tu casa.'] }}</p>
+		</div>
+
+		<div class="col-md-4">
+			<span class="fa-stack fa-4x">
+				<i class="fas fa-circle fa-stack-2x text-primary"></i>
+				<i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+			</span>
+			<h4 class="my-3">{{ translations['Compra 100% Segura'] }}</h4>
+			<p class="text-muted">{{ translations['Protegemos tus datos personales y garantizamos que recibirás exactamente lo que compraste.'] }}</p>
+		</div>
+	</div>
+</div></section><!-- Phone Products--><section class="page-section bg-light" id="products">
+<div class="container">
+	<div class="text-center">
+		<h2 class="section-heading text-uppercase">{{ translations['Nuestros Productos'] }}</h2>
+		<h3 class="section-subheading text-muted">{{ translations['Explora nuestra amplia gama de teléfonos móviles.'] }}</h3>
+	</div>
+
+	<div class="container my-5">
+		<h1 class="text-center mb-4">{{ translations['Moviles'] }}</h1>
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			{% for phone in phones %}
+				<div class="col">
+					<div class="card h-100">
+						<img src="{{ phone.image_url }}" class="card-img-top" alt="{{ phone.name }}" style="object-fit: cover;">
+						<div class="card-body">
+							<h5 class="card-title">{{ phone.name }}</h5>
+							<h3 class="card-text text-success">{{ translations['Precio:'] }}
+								{{ phone.price }}</h3>
+						</div>
+						<div class="card-footer text-center">
+							<a href="#" class="btn btn-primary">{{ translations['Comprar Ahora'] }}</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div></section><!-- About--><section class="page-section" id="about">
+<div class="container py-5">
+	<div class="row text-center mb-5">
+		<div class="col-lg-12">
+			<h2 class="section-heading text-uppercase">{{ translations['Acerca de Nosotros'] }}</h2>
+			<p class="text-muted mt-3">{{ translations['Descubre quiénes somos y por qué somos tu mejor opción.'] }}</p>
+		</div>
+	</div>
+
+	<!-- Primera sección con imagen -->
+	<div class="row align-items-center mb-5">
+		<div class="col-lg-6">
+			<h3 class="fw-bold">{{ translations['¿Quiénes Somos?'] }}</h3>
+			<p>
+				{{ translations['Somos'] }}
+				<strong>Phone Phony</strong>,
+				{{ translations['Una empresa dedicada a ofrecer los mejores teléfonos móviles del mercado. Nos hemos esforzado por combinar tecnología de calidad con un servicio confiable.'] }}
+			</p>
+			<p>
+				{{ translations['Nos hemos esforzado por combinar tecnología de calidad con un servicio confiable.'] }}
+			</p>
+		</div>
+		<div
+			class="col-lg-6">
+			<!-- Espacio para foto -->
+			<img src="/assets/img/expressive-young-woman-posing-studio.jpg" alt="Quiénes Somos" class="img-fluid rounded shadow">
+		</div>
+	</div>
+
+	<!-- Segunda sección con imagen -->
+	<div class="row align-items-center mb-5">
+		<div class="col-lg-6 order-lg-2">
+			<h3 class="fw-bold">{{ translations['Nuestra Misión'] }}</h3>
+			<p>
+				{{ translations['Facilitar el acceso a la tecnología más avanzada, asegurando una experiencia de compra simple, segura y accesible para todos.'] }}
+			</p>
+			<p>
+				{{ translations['Nos enfocamos en satisfacer las necesidades de nuestros clientes con productos confiables y precios competitivos.'] }}
+			</p>
+		</div>
+		<div
+			class="col-lg-6 order-lg-1">
+			<!-- Espacio para foto -->
+			<img src="/assets/img/business-strategy-success-target-goals.jpg" alt="Nuestra Misión" class="img-fluid rounded shadow">
+		</div>
+	</div>
+
+	<!-- Tercera sección con lista y foto -->
+	<div class="row align-items-center mb-5">
+		<div class="col-lg-6">
+			<h3 class="fw-bold">{{ translations['Por Qué Elegirnos'] }}</h3>
+			<ul class="list-unstyled">
+				<li>✔️
+					<strong>{{ translations['Calidad Garantizada:'] }}</strong>
+					{{ translations['Trabajamos solo con marcas reconocidas.'] }}</li>
+				<li>✔️
+					<strong>{{ translations['Pago Contra Entrega:'] }}</strong>
+					{{ translations['Paga solo cuando recibas el producto.'] }}</li>
+				<li>✔️
+					<strong>{{ translations['Atención al Cliente:'] }}</strong>
+					{{ translations['Estamos aquí para ti 24/7.'] }}</li>
+				<li>✔️
+					<strong>{{ translations['Precios Competitivos:'] }}</strong>
+					{{ translations['Tecnología al alcance de todos.'] }}</li>
+			</ul>
+		</div>
+		<div
+			class="col-lg-6">
+			<!-- Espacio para foto -->
+			<img src="/assets/img/woman-choosing-phone-technology-store.jpg" alt="Por Qué Elegirnos" class="img-fluid rounded shadow">
+		</div>
+	</div>
+
+	<!-- Contacto -->
+
+</div></section><!-- Footer--><footer class="footer py-4">
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col-lg-4 text-lg-start">Copyright &copy;Phone Phony</div>
+		<div class="col-lg-4 my-3 my-lg-0">
+			<a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Instagram">
+				<i class="fab fa-instagram"></i>
+			</a>
+			<a class="btn btn-dark btn-social mx-2" href="#!" aria-label="Facebook">
+				<i class="fab fa-facebook-f"></i>
+			</a>
+		</div>
+		<div class="col-lg-4 text-lg-end">
+			<a class="link-dark text-decoration-none me-3" href="#!">{{ translations['Política de privacidad'] }}</a>
+			<a class="link-dark text-decoration-none" href="#!">{{ translations['Condiciones de uso'] }}</a>
+		</div>
+	</div>
+</div></footer><!-- Bootstrap core JS--><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script><!-- Core theme JS--><script src="/assets/js/scripts.js"></script><script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script></body></html>

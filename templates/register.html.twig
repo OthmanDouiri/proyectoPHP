@@ -10,18 +10,40 @@
 		<title>Register</title>
 		<link href="assets/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 		<style>
+
+			body {
+				background-image: url('/assets/img/background-login.png');
+				background-size: cover;
+				background-position: center;
+			}
+
+			@keyframes slideIn {
+				from {
+					transform: translateX(-100%);
+					opacity: 0;
+				}
+				to {
+					transform: translateX(0);
+
+					opacity: 1;
+				}
+			}
+
 			.register-container {
 				max-width: 400px;
 				width: 100%;
 				padding: 2rem;
-				background-color: #fff;
-				border-radius: 8px;
+				background-color: gold;
+				border: 10px solid black;
+				border-radius: 25px;
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				animation: slideIn 1s ease-out forwards; /* Solo una vez y permanece en el estado final */
+
 			}
 			.register-title {
-				font-size: 1.5rem;
+				font-size: 2.5rem;
 				margin-bottom: 1rem;
-				font-weight: 600;
+				font-weight: 800;
 				color: #333;
 			}
 			.form-control:focus {
@@ -34,7 +56,8 @@
 	<body class="bg-light">
 		<div class="container d-flex justify-content-center align-items-center min-vh-100">
 			<div class="register-container">
-				<h1 class="register-title text-center">Register</h1>
+				<h1 class="register-title text-center">{{ translations['Registro'] }}</h1>
+
 
 				{% if message %}
 					<div class="alert alert-success text-center">
@@ -50,21 +73,31 @@
 
 				<form method="POST">
 					<div class="form-group mb-3">
-						<label for="inputName" class="form-label">Full Name</label>
+						<label for="inputName" class="form-label">{{ translations['Nombre completo'] }}</label>
+
+
 						<input type="text" id="inputName" name="username" class="form-control" placeholder="Full Name" required>
 					</div>
 					<div class="form-group mb-3">
-						<label for="inputEmail" class="form-label">Email Address</label>
+						<label for="inputEmail" class="form-label">{{ translations['Email'] }}</label>
+
+
 						<input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required>
 					</div>
 					<div class="form-group mb-4">
-						<label for="inputPassword" class="form-label">Password</label>
+						<label for="inputPassword" class="form-label">{{ translations['Contraseña'] }}</label>
+
+
 						<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
 					</div>
-					<button class="btn btn-primary w-100 btn-lg" type="submit">Register</button>
+					<button class="btn btn-dark w-100 btn-lg" type="submit">{{ translations['Registro'] }}</button>
+
 					<p class="text-center mt-3">
-						Already have an account?
-						<a href="login">Login</a>
+						{{ translations['¿Ya tienes una cuenta?'] }}
+
+						<a href="login">{{ translations['Iniciar sesión'] }}</a>
+
+
 					</p>
 					<p class="text-center mt-4 mb-3 text-muted">&copy; Phone Phony</p>
 				</form>

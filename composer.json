@@ -2,7 +2,11 @@
     "require": {
         "twig/twig": "^3.14",
         "twbs/bootstrap": "^5.3",
-        "firebase/php-jwt": "^6.10"
+        "firebase/php-jwt": "^6.10",
+        "symfony/translation": "^7.2",
+        "twig/intl-extra": "^3.19",
+        "twig/extra-bundle": "^3.19",
+        "symfony/twig-bridge": "^7.2"
     },
     "autoload": {
         "psr-4": {

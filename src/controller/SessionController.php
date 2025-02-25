@@ -279,8 +279,15 @@ public function logout() {
                 }
             }
     
+            // global $twig para que twig pueda ser usado en la función (i18n)
+            global $twig;
+
             // Renderiza la plantilla de Twig
-            echo $twig->render('login.html.twig', ['error' => $error]);
+            echo $twig->render('login.html.twig', [
+                'error' => $error
+                
+            
+            ]);
         }
 
 
@@ -310,6 +317,10 @@ public function logout() {
                 $error = "Error en el registro: " . $registerResult['error'];
             }
         }
+
+
+        
+        global $twig;
 
         // Renderiza la plantilla de Twig
         echo $twig->render('register.html.twig', [

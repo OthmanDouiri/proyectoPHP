@@ -70,6 +70,12 @@
 							<option value="4" {% if phone.marca_id == 4 %} selected {% endif %}>Google</option>
 						</select>
 					</div>
+
+					<div class="mb-3">
+						<label for="image_url" class="form-label">image_url</label>
+						<input type="text" class="form-control" id="image_url" name="image_url" value="{{ phone.image_url }}" >
+					</div>
+					
 					<button type="submit" class="btn btn-primary">Guardar Cambios</button>
 					<a href="/dashboard" class="btn btn-secondary">Cancelar</a>
 				</form>

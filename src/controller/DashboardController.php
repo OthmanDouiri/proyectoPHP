@@ -1,6 +1,5 @@
 <?php 
-//require_once '../src/controller/SessionController.php';
-//require_once '../src/controller/DatabaseController.php';
+
 namespace App\Controller;
 use App\Controller\SessionController;
 use App\Controller\DatabaseController;
@@ -28,19 +27,7 @@ class DashboardController {
     }
     
 
-    function detectUserLocale() {
-        $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5); // Detecta el idioma principal
-        
-        $supportedLanguages = ['en-US', 'es-ES']; // Idiomas soportados por la app
-        
 
-        // Verifica si el idioma detectado es compatible con los soportados
-        if (in_array($lang, $supportedLanguages)) {
-            return $lang;
-        } else {
-            return 'en-US'; // Idioma predeterminado
-        }
-    }
 
     // Método para obetener phone 
     // actualizamos getPhone para incluit la busqueda
@@ -120,6 +107,7 @@ class DashboardController {
 
         echo $this->twig->render('dashboard.html.twig',
         [
+           
             'phones' => $phones ,
             'username' => $usernameUppercase,
             'search_query' => $searchQuery,
