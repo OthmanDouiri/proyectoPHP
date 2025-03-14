@@ -63,7 +63,7 @@ Luego, descarga **ChromeDriver** compatible con tu versión de Chromium:
 
 ---
 
-## 🔹 3. Código básico de Scraping con Selenium y Chromium
+## 🔹 3. Código de Scraping con Selenium y Chromium
 
 Crear un archivo `Phone.py` y copia este código:
 
