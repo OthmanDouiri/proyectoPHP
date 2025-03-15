@@ -10,6 +10,7 @@ return [
     'Email' => 'Email',
     '¿Ya tienes una cuenta?' => '¿Ya tienes una cuenta?',
     'Iniciar sesión' => 'Iniciar sesión',
+    'Volver a Inicio' =>'Volver a Inicio',
 
     // Home
 
@@ -18,9 +19,13 @@ return [
     'Acerca' => 'Acerca de',
     'Idioma' => 'Idioma',
     'Español' => 'Español',
-    'Inglés' => 'Inglés',   
+    'Inglés' => 'Inglés',
+    'Producto Añadido' => 'Producto Añadido',
+    'Cerrar' => 'Cerrar',
+    'Ver Carrito' => 'Ver Carrito',
 
-
+    'Añadir al Carrito' => 'Añadir al Carrito',
+    'Finalizar Compra' => 'Finalizar Compra',
     'Bienvenidos a nuestra Tienda!' => 'Bienvenidos a nuestra Tienda!',
     'Encantados de conoceros' => 'Encantados de conoceros',
     'Cuéntame más' => 'Cuéntame más',

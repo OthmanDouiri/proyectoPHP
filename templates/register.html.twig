@@ -9,6 +9,11 @@
 		<meta name="generator" content="Hugo 0.122.0">
 		<title>Register</title>
 		<link href="assets/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet"/>
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet"/>
+		<link href="/assets/css/homeStyles.css" rel="stylesheet"/>
+
 		<style>
 
 			body {
@@ -34,9 +39,8 @@
 				width: 100%;
 				padding: 2rem;
 				background-color: gold;
-				border: 10px solid black;
 				border-radius: 25px;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				box-shadow: 0 4px 12px rgb(0, 0, 0);
 				animation: slideIn 1s ease-out forwards; /* Solo una vez y permanece en el estado final */
 
 			}
@@ -46,15 +50,20 @@
 				font-weight: 800;
 				color: #333;
 			}
-			.form-control:focus {
-				box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-				border-color: #80bdff;
-			}
 		</style>
 	</head>
 
 	<body class="bg-light">
 		<div class="container d-flex justify-content-center align-items-center min-vh-100">
+
+			<div class="position-absolute top-0 start-0 p-3">
+				<a href="/home" class="btn btn-light">
+					<i class="fas fa-home"></i>
+					{{ translations['Volver a Inicio'] }}
+				</a>
+			</div>
+
+
 			<div class="register-container">
 				<h1 class="register-title text-center">{{ translations['Registro'] }}</h1>
 
@@ -95,7 +104,7 @@
 					<p class="text-center mt-3">
 						{{ translations['¿Ya tienes una cuenta?'] }}
 
-						<a href="login">{{ translations['Iniciar sesión'] }}</a>
+						<a class="c-inh" href="login">{{ translations['Iniciar sesión'] }}</a>
 
 
 					</p>

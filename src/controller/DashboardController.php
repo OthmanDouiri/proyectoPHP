@@ -145,7 +145,46 @@ class DashboardController {
     }
 
 
-    public function renderUpdatePage($id) {
+    
+    public function handleUpdate() { 
+        // update phone using api curl
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $price = $_POST['price'];
+            $marca_id = $_POST['marca_id'];
+            $image_url = $_POST['image_url'];
+    
+            $data = [
+                'name' => $name,
+                'price' => $price,
+                'marca_id' => $marca_id,
+
+            ];
+            $url = "http://proyectophp.local/api/phones/$id";
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_CUSTOMREQUEST => 'PATCH',
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                CURLOPT_RETURNTRANSFER => true,
+            ]);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $response = json_decode($response, true);
+            if (isset($response['status']) && $response['status'] === 'error') {
+                echo $this->twig->render('404.html.twig', [
+                    'errorMessage' => $response['message'],
+                ]);
+            } else {
+                header('Location: /dashboard');
+                exit();
+            }
+        }
+    }
+
+     public function renderUpdatePage($id) {
         $phone = $this->getPhoneById($id);
         if (!$phone) {
             http_response_code(404);
@@ -155,76 +194,84 @@ class DashboardController {
         echo $this->twig->render('update.html.twig', ['phone' => $phone]);
     }
 
-
-    
-    public function handleUpdate() { 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {// Verificar si se envió el formulario
-            $id = $_POST['id'];// Recuperar los datos del formulario
-            $name = $_POST['name'];     
-            $price = $_POST['price'];
-            $marca_id = $_POST['marca_id'];
-    
-            $this->modifyPhone($id, $name, $price, $marca_id); // Modificar el teléfono en la base de datos
-            // onsublit alert to confirme the update
-            
-            // Redirigir al dashboard
-            header('Location: /dashboard');
-            exit();
-        }
-    }
     //-----------------delete phone----------------------------------------------
     public function deletePhone($id) {
-        try {
-            $sql = "DELETE FROM phone WHERE id = :id";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
-            $statement->execute();
-        } catch (PDOException $error) {
-            echo "Error: " . $error->getMessage();
-        }
-    }
-
-    public function handleDelete() {
-            $id = $_POST['phone_id'];
-            $this->deletePhone($id);
+        //delete phone using api curl
+        $url = "http://proyectophp.local/api/phones/$id";
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST => 'DELETE',
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response, true);
+        if (isset($response['status']) && $response['status'] === 'error') {
+            echo $this->twig->render('404.html.twig', [
+                'errorMessage' => $response['message'],
+            ]);
+        } else {
             header('Location: /dashboard');
             exit();
         }
-
-    //-----------------create phone-----------------------------            $sql = "UPDATE phone SET name = :name, price = :price , marca_id = :marca_id WHERE id = :id";
-
-    public function createPhone($name, $price,$marca_id,$image_url) {
-        try {
-            $sql = "INSERT INTO phone (name, price , marca_id , image_url ) VALUES (:name, :price , :marca_id , :image_url)";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':name', $name);
-            $statement->bindValue(':price', $price);
-            $statement->bindValue(':marca_id', $marca_id);
-            $statement->bindValue(':image_url',$image_url);
-            $statement->execute();
-        } catch (PDOException $error) {
-            echo "Error: " . $error->getMessage();
-        }
     }
 
+
+    //-----------------create phone-----------------------------           
+
+     // Método para manejar la creación de un teléfono usando cURL
     public function handleCreate() {
+        // Verificar si el formulario fue enviado
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
             $price = $_POST['price'];
             $marca_id = $_POST['marca_id'];
             $image_url = $_POST['image_url'];
-            
-            $this->createPhone($name, $price, $marca_id, $image_url);  
-            echo $this->twig->render('create.html.twig', [
-                'successMessage' => 'El teléfono fue creado exitosamente.',
+
+            // Llamar a la API usando cURL
+            $url = 'http://proyectophp.local/api/phones'; 
+            $data = [
+                'name' => $name,
+                'price' => $price,
+                'marca_id' => $marca_id,
+                'image_url' => $image_url,
+            ];
+
+            // Configuración de cURL
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                CURLOPT_RETURNTRANSFER => true,
             ]);
+
+            // Ejecutar la solicitud cURL
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            // Procesar la respuesta de la API
+            $response = json_decode($response, true);
+            if (isset($response['status']) && $response['status'] === 'error') {
+                // Si hubo un error, mostrar mensaje
+                echo $this->twig->render('create.html.twig', [
+                    'errorMessage' => $response['message'],
+                ]);
+            } else {
+                // Si la creación fue exitosa, mostrar mensaje de éxito
+                echo $this->twig->render('create.html.twig', [
+                    'successMessage' => 'El teléfono fue creado exitosamente.',
+                ]);
+            }
         }
     }
 
+    // Método para renderizar la página de creación
     public function renderCreatePage() {
         echo $this->twig->render('create.html.twig');
     }
-
 
 
     //Método para obtener los datos de la base de datos y generar el gráfico de la librería Highcharts

@@ -1,46 +1,30 @@
-
 window.addEventListener('DOMContentLoaded', event => {
 
-    // Navbar shrink function
+    // Función para hacer el navbar "shrink" al hacer scroll
     var navbarShrink = function () {
-        const navbarCollapsible = document.body.querySelector('#mainNav');
-        if (!navbarCollapsible) {
-            return;
-        }
+        const navbarCollapsible = document.getElementById('mainNav'); // Usar getElementById
+        if (!navbarCollapsible) return; // Verificar si el navbar existe
         if (window.scrollY === 0) {
-            navbarCollapsible.classList.remove('navbar-shrink')
+            navbarCollapsible.classList.remove('navbar-shrink');
         } else {
-            navbarCollapsible.classList.add('navbar-shrink')
+            navbarCollapsible.classList.add('navbar-shrink');
         }
-
     };
 
-    // Shrink the navbar 
+    // Ejecutar la función para aplicar el "shrink" en el navbar
     navbarShrink();
 
-    // Shrink the navbar when page is scrolled
+    // Activar el navbar "shrink" cuando se hace scroll
     document.addEventListener('scroll', navbarShrink);
 
-    //  Activate Bootstrap scrollspy on the main nav element
-    const mainNav = document.body.querySelector('#mainNav');
+    // Activar Bootstrap scrollspy para el navbar
+    const mainNav = document.getElementById('mainNav'); // Mejor usar getElementById
     if (mainNav) {
         new bootstrap.ScrollSpy(document.body, {
             target: '#mainNav',
             rootMargin: '0px 0px -40%',
         });
-    };
+    }
 
-    // Collapse responsive navbar when toggler is visible
-    const navbarToggler = document.body.querySelector('.navbar-toggler');
-    const responsiveNavItems = [].slice.call(
-        document.querySelectorAll('#navbarResponsive .nav-link')
-    );
-    responsiveNavItems.map(function (responsiveNavItem) {
-        responsiveNavItem.addEventListener('click', () => {
-            if (window.getComputedStyle(navbarToggler).display !== 'none') {
-                navbarToggler.click();
-            }
-        });
-    });
 
 });

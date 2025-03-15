@@ -132,6 +132,8 @@ public function logout() {
     
             // Establecer una cookie con el nombre 'token', que expira en 30 días
             setcookie("token", $token, time() + (86400 * 30), "/"); // 86400 segundos en un día * 30 días
+
+            
     
             // Guarda el token en la base de datos
             $statement = $this->conn->prepare("UPDATE User SET token = :token WHERE id = :id");
@@ -264,6 +266,10 @@ public function logout() {
                 if (isset($loginResult['token'])) {
                     // Guarda el token en la sesión
                     $_SESSION['token'] = $loginResult['token'];
+
+
+                    // Guardar el token en una cookie HTTP-Only
+                    setcookie("token", $loginResult['token'], time() + (86400 * 30), "/");
     
                     // Check if headers are already sent
                     if (headers_sent()) {

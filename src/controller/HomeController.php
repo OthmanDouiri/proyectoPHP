@@ -13,14 +13,22 @@ class HomeController
     }
 
     public function renderHome()
-    {
-        $dashboardController = new DashboardController();
-        $phones = $dashboardController->getPhone();
+{
 
-        echo $this->twig->render('home.html.twig', [
-            'phones' => $phones
-        ]);
-    }
+    // Get phones from the API
+    $url = 'http://proyectophp.local/api/phones'; // actual API URL
+    $json = file_get_contents($url);
+    $phones = json_decode($json, true);
+
+    echo $this->twig->render('home.html.twig', [
+        'phones' => $phones
+    ]);
+}
+
+
+
+    
+
 }
 
    

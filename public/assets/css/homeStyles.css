@@ -8077,10 +8077,7 @@ textarea.form-control-lg {
   color: rgba(var(--bs-body-color-rgb), var(--bs-text-opacity)) !important;
 }
 
-.text-muted {
-  --bs-text-opacity: 1;
-  color: #6c757d !important;
-}
+
 
 .text-black-50 {
   --bs-text-opacity: 1;
@@ -11306,4 +11303,97 @@ section#contact form#contactForm :-ms-input-placeholder {
 
 .br-15 {
   border-radius: 15px!important;
+}
+
+
+.a-h{
+    background-color: #343a40;
+    color: white;
+}
+.a-h:hover{
+    background-color:rgb(60, 76, 92);
+    color: white;
+    
+}
+
+
+/* Estilos generales para mejorar la responsividad */
+body {
+  font-size: 16px;
+}
+
+/* Ajustar la barra de navegación para móviles */
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+  font-size: 1.2rem;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+label{
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Sidebar responsivo */
+@media (max-width: 768px) {
+  .d-flex {
+      flex-direction: column;
+  }
+  
+  .bg-dark {
+      width: 100% !important;
+      text-align: center;
+  }
+  
+  .nav.flex-column {
+      flex-direction: row;
+      justify-content: center;
+  }
+
+  .nav-item {
+      padding: 0.5rem;
+  }
+}
+
+/* Ajustar contenedores */
+.container {
+  padding: 1rem;
+}
+
+/* Tabla responsiva */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Botones y formularios */
+.btn {
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+}
+
+/* Ajustar imágenes en la tabla */
+table img {
+  max-width: 40px;
+  height: auto;
+}
+
+/* Modal responsivo */
+.modal-content {
+  max-width: 100%;
+  margin: auto;
+}
+
+
+
+.c-inh {
+  color: black!important;
+  font-weight: 600;
+
 }

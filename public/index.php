@@ -31,6 +31,7 @@ use App\Controller\DashboardController;
 use App\Controller\SessionController;
 use App\Controller\ErrorController;
 use App\Controller\API\PhoneAPI;
+use App\Controller\ClientController;
 use App\Middleware\AuthMiddleware;
 
 
@@ -48,7 +49,9 @@ $viewDir = '/views/';
 if (strpos($request, '/api') === 0) {
     //To protect API requests for only users who can log in,
     //wee use the AuthMiddleware class to validate the JWT token.
-    AuthMiddleware::protectRoute();
+
+    
+     //AuthMiddleware::protectRoute();
 
     // Rutas de la API
     switch ($request) {
@@ -114,13 +117,18 @@ if (strpos($request, '/api') === 0) {
             break;
     }
 } else {
-    // Resto de las rutas (no API)
+    // Resto de las rutas 
     switch ($request) {
         case '': // Página raíz
         case '/':
         case '/home': // Página principal
             $homeController = new HomeController($twig);
             $homeController->renderHome();
+            break;
+    
+        case '/checkout':
+            $clientController = new ClientController($twig);
+            $clientController->renderCheckout();
             break;
 
         case '/login': // Página de inicio de sesión
@@ -154,22 +162,29 @@ if (strpos($request, '/api') === 0) {
             }
             break;
 
-        case '/create': // Creación de datos
+        case '/create': 
+            // Verificar si el usuario está autenticado
             SessionController::check();
-            $dashboardController = new DashboardController();
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                $dashboardController->renderCreatePage();
-            }
+
+            // Crear una instancia del controlador
+            $dashboardController = new DashboardController($twig);
+
+            // Manejar el proceso de creación
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $dashboardController->handleCreate();
+            } else {
+                // Si es una solicitud GET, mostrar la página de creación
+                $dashboardController->renderCreatePage();
             }
             break;
 
         case '/dashboard': // Página del dashboard
             SessionController::check();
-            $dashboardController = new DashboardController();
+            $dashboardController = new DashboardController($twig);
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
-                $dashboardController->handleDelete();
+                $phoneId = $_POST['phone_id'];  // Obtener el ID del teléfono desde el formulario
+                $dashboardController->deletePhone($phoneId);  // Pasar el ID a la función
             } else {
                 $dashboardController->renderDashboard();
             }

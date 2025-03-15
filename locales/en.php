@@ -10,9 +10,15 @@ return [
     'Nombre completo' => 'Full Name',
     'Email' => 'Email',
     '¿Ya tienes una cuenta?' => 'Already have an account?',
-
+    'Volver a Inicio' =>'Back Home',
 
 //home 
+    
+    'Añadir al Carrito' => 'Add to Cart',
+    'Finalizar Compra' => 'Checkout',
+    'Producto Añadido' => 'Product Added',
+    'Cerrar' => 'Close',
+    'Ver Carrito' => 'View Cart',
 
     'Servicios' => 'Services',
     'Productos' => 'Products',
@@ -56,6 +62,7 @@ return [
     'Copyright &copy;Phone Phony' => 'Copyright &copy;Phone Phony',
     'Política de privacidad' => 'Privacy Policy',
     'Condiciones de uso' => 'Terms of Use'
+
 ];
 
 
