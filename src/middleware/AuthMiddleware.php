@@ -1,7 +1,8 @@
 <?php
 
-/*Create a middleware to protect routes by validating 
-the JWT in the auth_token cookie.*/
+/* Creation de  middleware para proteger rutas por medio de la 
+validacion del JWT en la cookie auth_token*/
+
 namespace App\Middleware;
 
 use App\Utils\JWTUtils;

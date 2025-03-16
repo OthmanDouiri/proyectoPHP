@@ -22,7 +22,6 @@ class DashboardController {
         // Configurar Twig
         $loader = new FilesystemLoader(__DIR__ . '/../../templates');
         $this->twig = new Environment($loader);    
-
       
     }
     
@@ -32,56 +31,46 @@ class DashboardController {
     // Método para obetener phone 
     // actualizamos getPhone para incluit la busqueda
 
-    public function getPhone($searchQuery = null){
-        try {
-            // SQL para seleccionar el teléfono
-            $sql = "SELECT phone.*, marca.nombre AS marca_nombre 
-                FROM phone 
-                JOIN marca ON phone.marca_id = marca.id";
-
-            //Si $searchQuery no es null
-            if ($searchQuery) {
-                //Modifica la consulta SQL para filtrar los registros donde el nombre (name) o el precio (price) contengan la cadena proporcionada en $searchQuery.
-                $sql .= " WHERE phone.name LIKE :search OR phone.price LIKE :search OR marca.nombre LIKE :search";
-            }
-              // Añadimos el ORDER BY para ordenar por ID
-                $sql .= " ORDER BY phone.id ASC";
-            // Preparar la sentencia SQL
-            $statement = $this->conn->prepare($sql);
-            // 
-            if ($searchQuery) {
-                //Aquí, la condición asegura que solo se asocie un valor al marcador :search si realmente se va a usar.
-                $statement->bindValue(':search', "%$searchQuery%");
-            }
-            // Ejecutar la sentencia SQL
-            $statement->execute();
-            // Retornar el resultado de la consulta
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $error) {
-            echo "Error: " . $error->getMessage();
+    public function getPhone($searchQuery = null) {
+        // Obtener teléfonos usando API cURL
+        $url = 'http://proyectophp.local/api/phones';
+        if ($searchQuery) {
+            $url .= '?search=' . urlencode($searchQuery);
+        }
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response, true);
+        if (isset($response['status']) && $response['status'] === 'error') {
+            echo "Error: " . $response['message'];
             return false;
         }
+        return $response;
     }
 
 
     // methode para modificar phone
-    public function modifyPhone($id, $name, $price, $marca_id) {
-        try {
-            // SQL para actualizar el telefono coger el id y modificar el nombre y el precio
-            $sql = "UPDATE phone SET name = :name, price = :price , marca_id = :marca_id WHERE id = :id";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':id', $id);
-            $statement->bindValue(':name', $name);
-            $statement->bindValue(':price', $price);
-            $statement->bindValue(':marca_id', $marca_id);
-            // Ejecutar la sentencia SQL
-            $statement->execute();
-        } catch (PDOException $error) {
-            echo "Error: " . $error->getMessage();
-        }
+    // public function modifyPhone($id, $name, $price, $marca_id) {
+    //     try {
+    //         // SQL para actualizar el telefono coger el id y modificar el nombre y el precio
+    //         $sql = "UPDATE phone SET name = :name, price = :price , marca_id = :marca_id WHERE id = :id";
+    //         $statement = $this->conn->prepare($sql);
+    //         $statement->bindValue(':id', $id);
+    //         $statement->bindValue(':name', $name);
+    //         $statement->bindValue(':price', $price);
+    //         $statement->bindValue(':marca_id', $marca_id);
+    //         // Ejecutar la sentencia SQL
+    //         $statement->execute();
+    //     } catch (PDOException $error) {
+    //         echo "Error: " . $error->getMessage();
+    //     }
 
             
-    }
+    // }
 
     public function renderDashboard() {
         if (session_status() === PHP_SESSION_NONE) {
@@ -117,11 +106,11 @@ class DashboardController {
         );
     }
 
-
     public static function goOut(){
         // Verificar si se hizo clic en "Logout"
         if (isset($_POST['logout'])) {
             $sessionController = new SessionController();
+            // Cerrar la sesión
             $sessionController->logout();
         }
     }
@@ -132,16 +121,17 @@ class DashboardController {
 
     // for update-----------------------------------------
     public function getPhoneById($id) {
-        try {
-            $sql = "SELECT * FROM phone WHERE id = :id";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
-            $statement->execute();
-            return $statement->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $error) {
-            echo "Error: " . $error->getMessage();
-            return false;
-        }
+        // get phone by id using api curl
+        $url = "http://proyectophp.local/api/phones/$id";
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response, true);
+        return $response;
     }
 
 
@@ -159,6 +149,7 @@ class DashboardController {
                 'name' => $name,
                 'price' => $price,
                 'marca_id' => $marca_id,
+                'image_url' => $image_url,
 
             ];
             $url = "http://proyectophp.local/api/phones/$id";
@@ -184,7 +175,10 @@ class DashboardController {
         }
     }
 
+
+    // render update page
      public function renderUpdatePage($id) {
+
         $phone = $this->getPhoneById($id);
         if (!$phone) {
             http_response_code(404);
@@ -268,10 +262,10 @@ class DashboardController {
         }
     }
 
-    // Método para renderizar la página de creación
-    public function renderCreatePage() {
-        echo $this->twig->render('create.html.twig');
-    }
+            // Método para renderizar la página de creación
+            public function renderCreatePage() {
+                echo $this->twig->render('create.html.twig');
+            }
 
 
     //Método para obtener los datos de la base de datos y generar el gráfico de la librería Highcharts

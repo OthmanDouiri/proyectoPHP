@@ -10897,7 +10897,7 @@ p {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     border: none;
-    background-color: transparent;
+    background-color: transparent; 
     transition: padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
   }
   #mainNav .navbar-brand {
@@ -10927,6 +10927,10 @@ p {
     margin-right: 0;
   }
 }
+
+
+
+
 header.masthead {
   padding-top: 10.5rem;
   padding-bottom: 6rem;

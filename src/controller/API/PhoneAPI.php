@@ -11,6 +11,16 @@ class PhoneAPI {
         $this->conn = DatabaseController::connect();
     }
 
+
+
+
+
+
+
+
+
+
+    
     // GET /phones: Recupera una lista de phones
     public function getPhones($searchQuery = null) {
         header('Content-Type: application/json');  // Establecer encabezado para JSON
@@ -33,19 +43,32 @@ class PhoneAPI {
     }
 
     // GET /phones/{id}: Recupera un phone específico por su ID
-    public function getPhoneById($id) {
-        header('Content-Type: application/json');  // Establecer encabezado para JSON
-        try {
-            $sql = "SELECT phone.*, marca.nombre AS marca_nombre FROM phone JOIN marca ON phone.marca_id = marca.id WHERE phone.id = :id";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
-            $statement->execute();
-            $phone = $statement->fetch(PDO::FETCH_ASSOC);
+   public function getPhoneById($id) {
+    header('Content-Type: application/json'); // Asegurar respuesta en JSON
+
+    try {
+        $sql = "SELECT phone.*, marca.nombre AS marca_nombre 
+                FROM phone 
+                JOIN marca ON phone.marca_id = marca.id 
+                WHERE phone.id = :id";
+        $statement = $this->conn->prepare($sql);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        $phone = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($phone) {
+            http_response_code(200); // Éxito
             echo json_encode($phone);
-        } catch (PDOException $error) {
-            echo json_encode(['error' => 'Error: ' . $error->getMessage()]);
+        } else {
+            http_response_code(404); // No encontrado
+            echo json_encode(['status' => 'error', 'message' => 'Phone not found']);
         }
+    } catch (PDOException $error) {
+        http_response_code(500); // Error del servidor
+        echo json_encode(['status' => 'error', 'message' => 'Error: ' . $error->getMessage()]);
     }
+    exit();
+}
 
     // POST /phones: Crea un nuevo phone
     public function createPhone($name, $price, $marca_id, $image_url) {
@@ -111,7 +134,14 @@ class PhoneAPI {
 
             $statement = $this->conn->prepare($sql);
             $statement->execute($values);
-            echo json_encode(['message' => 'Phone partially updated successfully']);
+
+            if ($statement->rowCount() > 0) {
+                http_response_code(200); // Éxito
+                echo json_encode(['message' => 'Phone partially updated successfully', 'data' => $data]);
+            } else {
+                http_response_code(404); // No encontrado
+                echo json_encode(['message' => 'Phone not found']);
+            }
         } catch (PDOException $error) {
             echo json_encode(['error' => 'Error: ' . $error->getMessage()]);
         }
@@ -119,15 +149,25 @@ class PhoneAPI {
 
     // DELETE /phones/{id}: Elimina un phone específico
     public function deletePhone($id) {
-        header('Content-Type: application/json');  // Establecer encabezado para JSON
-        try {
-            $sql = "DELETE FROM phone WHERE id = :id";
-            $statement = $this->conn->prepare($sql);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
-            $statement->execute();
-            echo json_encode(['message' => 'Phone deleted successfully']);
-        } catch (PDOException $error) {
-            echo json_encode(['error' => 'Error: ' . $error->getMessage()]);
+    header('Content-Type: application/json'); // Respuesta en JSON
+
+    try {
+        $sql = "DELETE FROM phone WHERE id = :id";
+        $statement = $this->conn->prepare($sql);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            http_response_code(200); // Éxito
+            echo json_encode(['status' => 'success', 'message' => 'Phone deleted successfully']);
+        } else {
+            http_response_code(404); // No encontrado
+            echo json_encode(['status' => 'error', 'message' => 'Phone not found']);
         }
+    } catch (PDOException $error) {
+        http_response_code(500); // Error del servidor
+        echo json_encode(['status' => 'error', 'message' => 'Error: ' . $error->getMessage()]);
     }
+    exit();
 }
+}   

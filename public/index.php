@@ -58,6 +58,8 @@ if (strpos($request, '/api') === 0) {
 
         // Ruta para obtener todos los teléfonos
         case '/api/phones':
+             // Verificar si el usuario está autenticado
+            AuthMiddleware::protectRoute();
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $phoneAPI = new PhoneAPI();
                 $searchQuery = isset($_GET['search']) ? $_GET['search'] : null;
@@ -147,6 +149,9 @@ if (strpos($request, '/api') === 0) {
             break;
 
         case '/update': // Actualización de datos
+
+             // Verificar si el usuario está autenticado
+            AuthMiddleware::protectRoute();
             SessionController::check();
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['id'])) {
@@ -162,7 +167,10 @@ if (strpos($request, '/api') === 0) {
             }
             break;
 
-        case '/create': 
+        case '/create':
+
+             // Verificar si el usuario está autenticado
+            AuthMiddleware::protectRoute();
             // Verificar si el usuario está autenticado
             SessionController::check();
 
@@ -179,7 +187,10 @@ if (strpos($request, '/api') === 0) {
             break;
 
         case '/dashboard': // Página del dashboard
+            AuthMiddleware::protectRoute();  // Aquí se valida la autenticación del usuario
+            // Verificar si el usuario está autenticado
             SessionController::check();
+            
             $dashboardController = new DashboardController($twig);
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['phone_id'])) {
