@@ -1,12 +1,12 @@
-# Phone Phony Plataforma de Venta de Teléfonos (Pago Contra Entrega)
+# 📱 Phone Phony Plataforma de Venta de Teléfonos (Pago Contra Entrega)
 
 Una plataforma web para navegar y comprar teléfonos con el método de pago contra entrega (COD). La plataforma ofrece una interfaz intuitiva, segura y responsiva para que tanto los usuarios como los administradores gestionen productos, pedidos y usuarios. Este proyecto incorpora características como autenticación con JWT, internacionalización (i18n), visualización gráfica avanzada con Highcharts y Web Scraping usando Python y Selenium.
 
 ---
 
-## Tecnologías Utilizadas
+## ⚙️ Tecnologías Utilizadas
 
-### Backend
+### 💻 Backend
 
 - **PHP**: El lenguaje de programación del lado del servidor utilizado para construir la lógica del backend.
 - **PDO (PHP Data Objects)**: Una capa de acceso a la base de datos segura y eficiente.
@@ -16,7 +16,7 @@ Una plataforma web para navegar y comprar teléfonos con el método de pago cont
 - **Apache**: El servidor web que aloja la aplicación.
 - **XAMPP**: Un entorno de desarrollo local que agrupa Apache, MySQL y PHP.
 
-### Frontend
+### 🌐 Frontend
 
 - **HTML5**: El lenguaje de marcado utilizado para estructurar las páginas web.
 - **CSS3**: Utilizado para el diseño y estilo de las páginas, asegurando un enfoque mobile-first y responsive.
@@ -25,18 +25,18 @@ Una plataforma web para navegar y comprar teléfonos con el método de pago cont
 - **Twig**: Motor de plantillas utilizado para renderizar contenido dinámico en el frontend.
 - **Highcharts**: Una biblioteca gráfica utilizada para crear gráficos interactivos y visualmente atractivos (gráficos de tipo pie).
 
-### Web Scraping
+### 🤖 Web Scraping
 
 - **Python**: Lenguaje de programación utilizado para el web scraping.
 - **Selenium**: Biblioteca de Python utilizada para la automatización de la navegación web y extracción de datos de sitios externos.
 
-### Internacionalización (i18n)
+### 🌐 Internacionalización (i18n)
 
 - **i18n**: Habilita el soporte multilingüe cargando archivos de idiomas y traducciones dinámicamente, proporcionando una experiencia internacionalizada para usuarios de diferentes regiones.
 
 ---
 
-## Características
+## ✨ Características
 
 - **Interfaz Amigable para el Usuario**: Navegación fácil para explorar y comprar teléfonos.
 - **Pago Contra Entrega (COD)**: Permite a los usuarios seleccionar el pago contra entrega como método de pago.
@@ -50,11 +50,11 @@ Una plataforma web para navegar y comprar teléfonos con el método de pago cont
 - **Web Scraping**: Automatización y extracción de datos de sitios externos usando **Python** y **Selenium**.
 
 
-## Instalación
+## 📝 Instalación
 
 Para poner en marcha el proyecto localmente, sigue estos pasos:
 
-### 1. Clonar el Repositorio
+### 1. 📂 Clonar el Repositorio
 
 Clona este repositorio en tu máquina local:
 
@@ -62,7 +62,7 @@ Clona este repositorio en tu máquina local:
 git clone https://github.com/OthmanDouiri/proyectoPHP.git
 ```
 
-### 2. Instalar Dependencias
+### 2. ⚙️ Instalar Dependencias
 
 Instala las dependencias necesarias de PHP utilizando Composer:
 
@@ -70,23 +70,23 @@ Instala las dependencias necesarias de PHP utilizando Composer:
 composer install
 ```
 
-### 3. Configurar la Base de Datos
+### 3. 📚 Configurar la Base de Datos
 
 1. Importa el archivo `database.sql`que esta en la carpeta **db** en tu base de datos MySQL.
 2. Actualiza la configuración de la conexión a la base de datos en `/src/controller/DatabaseController.php`.
 
-### 4. Configurar la Autenticación JWT
+### 4. 🔑 Configurar la Autenticación JWT
 
 - La clave secreta JWT debe ser configurada en el archivo `/src/utils/JWTUtils.php` .
 - Asegúrate de que el encabezado `Authorization` se pase correctamente en las rutas protegidas.
 
-### 5. Instalar Dependencias de Web Scraping (Python y Selenium)
+### 5. 🛠️ Instalar Dependencias de Web Scraping (Python y Selenium)
 
 Si necesitas ejecutar el script de web scraping, aqui te dejo mi fichero webScraping.md para hacerlo paso a paso : 
 [Python Selenium (webScraping)](webScraping.md)
 
 
-### 6. Iniciar el Servidor de Desarrollo
+### 6. 🔄 Iniciar el Servidor de Desarrollo
 
 1- Utilizando **XAMPP**, asegúrate de que Apache y MySQL estén en ejecución.
 2- Coloca los archivos del proyecto en la carpeta `htdocs` de tu instalación de XAMPP.
@@ -98,7 +98,7 @@ si quieres configurar tu proyecto utilizando **Virtual Hosts** en XAMPP para que
 
 ---
 
-## Documentación de la API
+## 📚 Documentación de la API
 
 La plataforma incluye una API para gestionar los datos de teléfonos. Los siguientes puntos finales están disponibles:
 
@@ -116,7 +116,7 @@ DELETE api/phones/{id}: Elimina un phone específico
 
 ---
 
-## Uso
+## 🤖 Uso
 
 1. **Abre la plataforma** en tu navegador.
 2. Navega por los teléfonos disponibles.
@@ -126,7 +126,7 @@ DELETE api/phones/{id}: Elimina un phone específico
 
 ---
 
-## Datos Gráficos (Highcharts)
+## 📊 Datos Gráficos (Highcharts)
 
 La plataforma utiliza **Highcharts** para proporcionar visualizaciones gráficas interactivas, como gráficos de tipo pie. Por ejemplo, los administradores pueden ver datos como la distribución de ventas de teléfonos o distribución del stock en formato de gráfico de pastel.
 
@@ -165,7 +165,7 @@ Highcharts.chart('brandPieChart', {
 ```
 
 
-## Contacto
+## 📞 Contacto
 
 Si tienes preguntas o comentarios, no dudes en ponerte en contacto con [othman.douiri1@gmail.com].
 
