@@ -44,7 +44,7 @@ Una plataforma web para navegar y comprar teléfonos con el método de pago cont
 - **Categorías de Productos**: Los teléfonos están organizados en categorías para una fácil navegación.
 - **Carrito de Compras**: Añadir/eliminar teléfonos del carrito y proceder a la compra.
 - **Panel de Administración**: Interfaz para que los administradores gestionen productos, pedidos y usuarios.
-- **Autenticación de Usuarios**: Inicio de sesión y registro seguro con JWT para gestionar las sesiones de usuario.
+- **Autenticación de Admin**: Inicio de sesión y registro seguro con JWT para gestionar las sesiones de Admin.
 - **API para Teléfonos**: API para gestionar datos de teléfonos (agregar, actualizar, eliminar teléfonos).
 - **Visualización Gráfica de Datos**: Uso de **Highcharts** para presentar datos de teléfonos (gráficos de tipo pie).
 - **Web Scraping**: Automatización y extracción de datos de sitios externos usando **Python** y **Selenium**.
