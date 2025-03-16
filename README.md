@@ -1,262 +1,175 @@
-# proyectoPHP
+# 📱 Phone Phony Plataforma de Venta de Teléfonos (Pago Contra Entrega)
 
-
-
-## 🔹 1. Instalar Python y configurar un entorno virtual
-### ✅ Verificar que Python está instalado
-Abre la terminal (CMD o PowerShell) y escribe:
-
-```sh
-python --version
-```
-
-Si no tienes Python, descárgalo desde [python.org](https://www.python.org/downloads/).
-
-### ✅ Crear un entorno virtual
-En la carpeta donde quieres trabajar, ejecuta:
-
-```sh
-python -m venv venv
-```
-
-Esto creará una carpeta llamada `venv` con un entorno virtual.
-
-### ✅ Activar el entorno virtual
-Ejecuta:
-
-```sh
-venv\Scripts\activate
-```
-
-Si usas PowerShell, quizá necesites cambiar la política de ejecución:
-
-```sh
-Set-ExecutionPolicy Unrestricted -Scope Process
-venv\Scripts\Activate
-```
+Una plataforma web para navegar y comprar teléfonos con el método de pago contra entrega (COD). La plataforma ofrece una interfaz intuitiva, segura y responsiva para que tanto los usuarios como los administradores gestionen productos, pedidos y usuarios. Este proyecto incorpora características como autenticación con JWT, internacionalización (i18n), visualización gráfica avanzada con Highcharts y Web Scraping usando Python y Selenium.
 
 ---
 
-## 🔹 2. Instalar Selenium y mysql-connector y Chromium Driver
-### ✅ Instalar Selenium
-Con el entorno virtual activado, instala Selenium:
+## ⚙️ Tecnologías Utilizadas
 
-```sh
-pip install selenium
-```
-```sh
-pip install mysql-connector-python
-```
-(venv) PS C:\Users\Othman\Desktop\WebScraping> pip install selenium
-(venv) PS C:\Users\Othman\Desktop\WebScraping> pip install mysql-connector-python
+### 💻 Backend
 
-### ✅ Descargar Chromium y ChromeDriver
-Descarga **Chromium** desde:
+- **PHP**: El lenguaje de programación del lado del servidor utilizado para construir la lógica del backend.
+- **PDO (PHP Data Objects)**: Una capa de acceso a la base de datos segura y eficiente.
+- **MySQL**: Sistema de gestión de bases de datos relacional para almacenar los datos de productos, usuarios y pedidos.
+- **Composer**: Herramienta de gestión de dependencias de PHP para instalar y gestionar paquetes de PHP.
+- **JWT (JSON Web Token)**: Utilizado para la autenticación y autorización segura de usuarios.
+- **Apache**: El servidor web que aloja la aplicación.
+- **XAMPP**: Un entorno de desarrollo local que agrupa Apache, MySQL y PHP.
 
-🔗 [https://chromium.woolyss.com/](https://chromium.woolyss.com/)
+### 🌐 Frontend
 
-Luego, descarga **ChromeDriver** compatible con tu versión de Chromium:
+- **HTML5**: El lenguaje de marcado utilizado para estructurar las páginas web.
+- **CSS3**: Utilizado para el diseño y estilo de las páginas, asegurando un enfoque mobile-first y responsive.
+- **JavaScript**: Scripting del lado del cliente para la interacción dinámica y contenido interactivo.
+- **Bootstrap**: Un framework front-end responsive para el diseño y estilo móvil.
+- **Twig**: Motor de plantillas utilizado para renderizar contenido dinámico en el frontend.
+- **Highcharts**: Una biblioteca gráfica utilizada para crear gráficos interactivos y visualmente atractivos (gráficos de tipo pie).
 
-🔗 [https://sites.google.com/chromium.org/driver/](https://sites.google.com/chromium.org/driver/)
+### 🤖 Web Scraping
 
-**Nota:** descomprimir `chromedriver.exe` en la misma carpeta de tu proyecto .
+- **Python**: Lenguaje de programación utilizado para el web scraping.
+- **Selenium**: Biblioteca de Python utilizada para la automatización de la navegación web y extracción de datos de sitios externos.
 
----
+### 🌐 Internacionalización (i18n)
 
-## 🔹 3. Código de Scraping con Selenium y Chromium
-
-Crear un archivo `Phone.py` y copia este código:
-
-```python
-import time
-import random
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-import mysql.connector
-
-#  Configurar conexión a la base de datos
-con = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="auth_db2"
-)
-cursor = con.cursor()
-
-#  Configurar opciones de Selenium
-chrome_options = Options()
-chrome_options.add_argument("--headless")  # Ejecutar sin abrir ventana (opcional)
-chrome_options.add_argument("--disable-gpu")  
-chrome_options.add_argument("--no-sandbox")  
-chrome_options.add_argument("--disable-dev-shm-usage")  
-chrome_options.add_argument("--window-size=1920x1080")  
-
-# Simular un navegador real para evitar bloqueos
-chrome_options.add_argument(
-    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-)
-
-# Ruta correcta de ChromeDriver en Windows
-service = Service(r"C:\Users\Othman\Desktop\WebScraping\chromedriver.exe")
-
-#  Inicializar WebDriver
-driver = webdriver.Chrome(service=service, options=chrome_options)
-
-#  URL de Amazon
-url = "https://www.amazon.es/s?k=moviles+iphone"
-driver.get(url)
-
-#  Esperar unos segundos para evitar bloqueos (simula comportamiento humano)
-time.sleep(random.uniform(2, 5))
-
-#  Encontrar todos los productos en la página
-products = driver.find_elements(By.CSS_SELECTOR, ".s-result-item.s-asin")
-
-#  Contador para limitar el número de productos procesados
-product_count = 0
-max_products = 20  # Número máximo de productos a procesar
-
-#  Iterar sobre los productos
-for product in products:
-    if product_count >= max_products:  # Detener el bucle si se alcanzan 20 productos
-        break
-
-    try:
-        # Inicializar variables como `None`
-        name = None
-        price = None
-        image_url = None
-
-        # Extraer el nombre del producto
-        try:
-            name = product.find_element(By.CSS_SELECTOR, "h2 span").text
-        except Exception:
-            print("Nombre no encontrado.")
-
-        # Extraer el precio del producto
-        try:
-            price = product.find_element(By.CSS_SELECTOR, ".a-price-whole").text
-            if not price.endswith("€"):
-                price += "€"
-        except Exception:
-            print("Precio no encontrado.")
-
-        # Extraer la URL de la imagen del producto
-        try:
-            image_url = product.find_element(By.CSS_SELECTOR, ".s-image").get_attribute("src")
-        except Exception:
-            print("URL de la imagen no encontrada.")
-
-        #  Comprobar si todos los valores son válidos antes de insertar en la base de datos
-        if name and price and image_url:
-            print(f"Producto: {name}, Precio: {price}, Imagen URL: {image_url}")
-            cursor.execute(
-                "INSERT INTO phone (name, price, image_url) VALUES (%s, %s, %s)",
-                (name, price, image_url)
-            )
-            con.commit()
-            product_count += 1  # Incrementar el contador solo si el producto se añadió correctamente
-        else:
-            print("Producto no válido (falta algún valor), no se añadirá a la base de datos.")
-
-        #  Espera aleatoria entre cada iteración para evitar bloqueos
-        time.sleep(random.uniform(2, 5))
-
-    except Exception as e:
-        print("Error al procesar el producto:", e)
-
-#  Cerrar la conexión a la base de datos
-cursor.close()
-con.close()
-
-#  Cerrar el navegador
-driver.quit()
-
-
-```
+- **i18n**: Habilita el soporte multilingüe cargando archivos de idiomas y traducciones dinámicamente, proporcionando una experiencia internacionalizada para usuarios de diferentes regiones.
 
 ---
 
-## 🔹 4. Ejecutar el Script
-Con el entorno virtual activado, ejecuta:
+## ✨ Características
 
-```sh
-python phone.py
+- **Interfaz Amigable para el Usuario**: Navegación fácil para explorar y comprar teléfonos.
+- **Pago Contra Entrega (COD)**: Permite a los usuarios seleccionar el pago contra entrega como método de pago.
+- **Diseño Responsive**: Diseño completamente responsive que funciona en todos los tamaños de pantalla.
+- **Categorías de Productos**: Los teléfonos están organizados en categorías para una fácil navegación.
+- **Carrito de Compras**: Añadir/eliminar teléfonos del carrito y proceder a la compra.
+- **Panel de Administración**: Interfaz para que los administradores gestionen productos, pedidos y usuarios.
+- **Autenticación de Admin**: Inicio de sesión y registro seguro con JWT para gestionar las sesiones de Admin.
+- **API para Teléfonos**: API para gestionar datos de teléfonos (agregar, actualizar, eliminar teléfonos).
+- **Visualización Gráfica de Datos**: Uso de **Highcharts** para presentar datos de teléfonos (gráficos de tipo pie).
+- **Web Scraping**: Automatización y extracción de datos de sitios externos usando **Python** y **Selenium**.
+
+
+## 📝 Instalación
+
+Para poner en marcha el proyecto localmente, sigue estos pasos:
+
+### 1. 📂 Clonar el Repositorio
+
+Clona este repositorio en tu máquina local:
+
+```bash
+git clone https://github.com/OthmanDouiri/proyectoPHP.git
+```
+
+### 2. ⚙️ Instalar Dependencias
+
+Instala las dependencias necesarias de PHP utilizando Composer:
+
+```bash
+composer install
+```
+
+### 3. 📚 Configurar la Base de Datos
+
+1. Importa el archivo `database.sql`que esta en la carpeta **db** en tu base de datos MySQL.
+2. Actualiza la configuración de la conexión a la base de datos en `/src/controller/DatabaseController.php`.
+
+### 4. 🔑 Configurar la Autenticación JWT
+
+- La clave secreta JWT debe ser configurada en el archivo `/src/utils/JWTUtils.php` .
+- Asegúrate de que el encabezado `Authorization` se pase correctamente en las rutas protegidas.
+
+### 5. 🛠️ Instalar Dependencias de Web Scraping (Python y Selenium)
+
+Si necesitas ejecutar el script de web scraping, aqui te dejo mi fichero webScraping.md para hacerlo paso a paso : 
+[Python Selenium (webScraping)](webScraping.md)
+
+
+### 6. 🔄 Iniciar el Servidor de Desarrollo
+
+1- Utilizando **XAMPP**, asegúrate de que Apache y MySQL estén en ejecución.
+2- Coloca los archivos del proyecto en la carpeta `htdocs` de tu instalación de XAMPP.
+3- Abre el proyecto en tu navegador en `http://localhost/proyectophp`.
+
+
+si quieres configurar tu proyecto utilizando **Virtual Hosts** en XAMPP para que puedas acceder a tu proyecto usando un nombre de **dominio.local**, en lugar de usar http://localhost/miProyecto. Aquí tienes una guía para configurar Virtual Hosts en XAMPP:
+[Virtual Hosts](VirtualHosts.md)
+
+---
+
+## 📚 Documentación de la API
+
+La plataforma incluye una API para gestionar los datos de teléfonos. Los siguientes puntos finales están disponibles:
+
+### **/api/phones**
+```bash
+GET api/phones: Recupera una lista de phones
+GET api/phones/{id}: Recupera un phone específico por su ID
+POST api/phones: Crea un nuevo phone
+PUT api/phones/{id}: Actualiza todos los datos de un phone específico
+PATCH api/phones/{id}: Modifica parcialmente los datos de un phone
+DELETE api/phones/{id}: Elimina un phone específico
+
 ```
 
 
+---
 
+## 🤖 Uso
 
+1. **Abre la plataforma** en tu navegador.
+2. Navega por los teléfonos disponibles.
+3. Añade el teléfono deseado al carrito y procede al pago.
+4. **Pago Contra Entrega (COD)** como tu método de pago.
+5. Confirma tu pedido y espera la entrega.
 
+---
 
+## 📊 Datos Gráficos (Highcharts)
 
+La plataforma utiliza **Highcharts** para proporcionar visualizaciones gráficas interactivas, como gráficos de tipo pie. Por ejemplo, los administradores pueden ver datos como la distribución de ventas de teléfonos o distribución del stock en formato de gráfico de pastel.
 
-
-
-
-Para establecer una relación entre las tablas `phone` y `marca`, puedes usar un esquema en el que cada teléfono tenga una referencia a su marca. A continuación, te explico cómo diseñar esto paso a paso en SQL:
-
-### 1. **Crear la tabla `marca`**
-La tabla `marca` tendrá al menos dos columnas: `id` (clave primaria) y `nombre` (nombre de la marca). 
-
-```sql
-CREATE TABLE marca (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL
-);
+```javascript
+Highcharts.chart('brandPieChart', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Distribución de marcas de móviles'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Porcentaje',
+                        colorByPoint: true,
+                        data: chartData
+                    }]
+                });
 ```
 
-### 2. **Actualizar la tabla `phone` para incluir la relación**
-Añade una columna `marca_id` en la tabla `phone` para vincular cada teléfono con su marca. Esta columna será una clave foránea que apunte a la tabla `marca`.
 
-```sql
-ALTER TABLE phone
-ADD COLUMN marca_id INT,
-ADD CONSTRAINT fk_phone_marca
-FOREIGN KEY (marca_id) REFERENCES marca(id);
-```
+## 📞 Contacto
 
-### 3. **Ejemplo de datos**
-- Insertar marcas en la tabla `marca`:
+Si tienes preguntas o comentarios, no dudes en ponerte en contacto con [othman.douiri1@gmail.com].
 
-```sql
-INSERT INTO marca (nombre) VALUES 
-('Samsung'),
-('Apple'),
-('Xiaomi'),
-('Huawei');
-```
-
-- Insertar teléfonos en la tabla `phone` vinculados a una marca:
-
-```sql
-INSERT INTO phone (nombre, precio, marca_id) VALUES 
-('Galaxy S23', 799, 1), -- Samsung
-('iPhone 14', 999, 2), -- Apple
-('Redmi Note 12', 249, 3), -- Xiaomi
-('P50 Pro', 699, 4); -- Huawei
-```
-
-### 4. **Consultas comunes**
-- Obtener todos los teléfonos con su marca:
-
-```sql
-SELECT p.nombre AS telefono, p.precio, m.nombre AS marca
-FROM phone p
-JOIN marca m ON p.marca_id = m.id;
-```
-
-- Contar cuántos teléfonos tiene cada marca:
-
-```sql
-SELECT m.nombre AS marca, COUNT(p.id) AS total_telefonos
-FROM marca m
-LEFT JOIN phone p ON m.id = p.marca_id
-GROUP BY m.nombre;
-```
-
+---
 
 
 
