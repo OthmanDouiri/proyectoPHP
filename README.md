@@ -72,7 +72,7 @@ composer install
 
 ### 3. Configurar la Base de Datos
 
-1. Importa el archivo `database.sql`que esta en la carpeta db en tu base de datos MySQL.
+1. Importa el archivo `database.sql`que esta en la carpeta **db** en tu base de datos MySQL.
 2. Actualiza la configuración de la conexión a la base de datos en `/src/controller/DatabaseController.php`.
 
 ### 4. Configurar la Autenticación JWT
