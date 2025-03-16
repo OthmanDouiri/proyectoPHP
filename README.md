@@ -88,9 +88,13 @@ Si necesitas ejecutar el script de web scraping, aqui te dejo mi fichero webScra
 
 ### 6. Iniciar el Servidor de Desarrollo
 
-- Utilizando **XAMPP**, asegúrate de que Apache y MySQL estén en ejecución.
-- Coloca los archivos del proyecto en la carpeta `htdocs` de tu instalación de XAMPP.
-- Abre el proyecto en tu navegador en `http://localhost/proyectophp.local`.
+1- Utilizando **XAMPP**, asegúrate de que Apache y MySQL estén en ejecución.
+2- Coloca los archivos del proyecto en la carpeta `htdocs` de tu instalación de XAMPP.
+3- Abre el proyecto en tu navegador en `http://localhost/proyectophp`.
+
+
+si quieres configurar tu proyecto utilizando **Virtual Hosts** en XAMPP para que puedas acceder a tu proyecto usando un nombre de **dominio.local**, en lugar de usar http://localhost/miProyecto. Aquí tienes una guía para configurar Virtual Hosts en XAMPP:
+[Virtual Hosts](VirtualHosts.md)
 
 ---
 
