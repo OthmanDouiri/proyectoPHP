@@ -62,6 +62,9 @@ return [
     'Copyright &copy;Phone Phony' => 'Copyright &copy;Phone Phony',
     'Política de privacidad' => 'Política de privacidad',
     'Condiciones de uso' => 'Condiciones de uso',
+    'Producto Añadido' => 'Producto Añadido',
+    'Cerrar' => 'Cerrar',
+    'ha sido añadido al carrito!' => 'ha sido añadido al carrito!',
     
 ];
 

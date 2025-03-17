@@ -30,7 +30,7 @@ public static function generateJWt($userId,$username,$role){
 
 }
 
-
+// Validar un token JWT
 public static function validateJWT($token){
     try {
         return JWT::decode($token, new Key(self::$key, 'HS256'));

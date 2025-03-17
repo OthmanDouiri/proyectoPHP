@@ -79,6 +79,16 @@
   }
 }
 
+html,
+body {
+  overflow-x: hidden;
+  /* Evita el scroll horizontal */
+  width: 100vw;
+  /* Asegura que el ancho no se expanda más allá de la pantalla */
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);

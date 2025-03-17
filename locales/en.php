@@ -61,7 +61,10 @@ return [
     'Tecnología al alcance de todos.' => 'Technology within everyone’s reach.',
     'Copyright &copy;Phone Phony' => 'Copyright &copy;Phone Phony',
     'Política de privacidad' => 'Privacy Policy',
-    'Condiciones de uso' => 'Terms of Use'
+    'Condiciones de uso' => 'Terms of Use',
+    'Producto Añadido' => 'Product Added',
+    'Cerrar' => 'Close',
+    'ha sido añadido al carrito!' => 'has been added to the cart!',
 
 ];
 
