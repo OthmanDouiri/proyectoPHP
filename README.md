@@ -24,6 +24,7 @@ Una plataforma web para navegar y comprar teléfonos con el método de pago cont
 - **Bootstrap**: Un framework front-end responsive para el diseño y estilo móvil.
 - **Twig**: Motor de plantillas utilizado para renderizar contenido dinámico en el frontend.
 - **Highcharts**: Una biblioteca gráfica utilizada para crear gráficos interactivos y visualmente atractivos (gráficos de tipo pie).
+- **GSAP**: Biblioteca de animaciones de alto rendimiento para crear efectos visuales fluidos y dinámicos en la web.
 
 ### 🤖 Web Scraping
 
