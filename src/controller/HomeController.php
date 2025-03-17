@@ -12,6 +12,8 @@ class HomeController
         $this->twig = $twig;
     }
 
+
+    // Render the home page
     public function renderHome()
 {
 

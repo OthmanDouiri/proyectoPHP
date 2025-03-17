@@ -37,7 +37,7 @@ class DatabaseController {
    
       return self::$instance;
     }
-
+    // Connect to the database
     public static function connect () {
         try  {
             $connection = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$username, self::$password, self::$options);

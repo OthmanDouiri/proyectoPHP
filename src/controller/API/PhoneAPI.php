@@ -12,15 +12,6 @@ class PhoneAPI {
     }
 
 
-
-
-
-
-
-
-
-
-    
     // GET /phones: Recupera una lista de phones
     public function getPhones($searchQuery = null) {
         header('Content-Type: application/json');  // Establecer encabezado para JSON

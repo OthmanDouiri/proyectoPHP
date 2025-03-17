@@ -26,7 +26,6 @@ class ClientController
 
 
 
-    // recuperar todos del cliente y insertarlas en la db 
     
 
 

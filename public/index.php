@@ -134,11 +134,13 @@ if (strpos($request, '/api') === 0) {
             break;
 
         case '/login': // Página de inicio de sesión
+            AuthMiddleware::protectRoute();
             $sessionController = new SessionController();
             $sessionController->handleLogin();
             break;
 
         case '/logout': // Acción de cierre de sesión
+            AuthMiddleware::protectRoute();
             $sessionController = new SessionController();
             $sessionController->logout();
             break;

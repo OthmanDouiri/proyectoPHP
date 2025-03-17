@@ -72,6 +72,8 @@ class DashboardController {
             
     // }
 
+
+    // Método para renderizar el dashboard
     public function renderDashboard() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start(); // Assurez-vous que la session est démarrée
@@ -106,6 +108,7 @@ class DashboardController {
         );
     }
 
+   // function para cerrar sesion    
     public static function goOut(){
         // Verificar si se hizo clic en "Logout"
         if (isset($_POST['logout'])) {
