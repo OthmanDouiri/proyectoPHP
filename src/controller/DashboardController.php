@@ -71,9 +71,7 @@ class DashboardController {
 
             
     // }
-
-
-    // Método para renderizar el dashboard
+        
     public function renderDashboard() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start(); // Assurez-vous que la session est démarrée

@@ -187,7 +187,6 @@ if (strpos($request, '/api') === 0) {
             break;
 
         case '/dashboard': // Página del dashboard
-            AuthMiddleware::protectRoute();  // Aquí se valida la autenticación del usuario
             // Verificar si el usuario está autenticado
             SessionController::check();
             
