@@ -23,7 +23,7 @@ class PhoneAPI {
             $sql .= " ORDER BY phone.id ASC";
             $statement = $this->conn->prepare($sql);
             if ($searchQuery) {
-                $statement->bindValue(':search', "%$searchQuery%");
+                $statement->bindValue(':search', "%$searchQuery%", PDO::PARAM_STR);
             }
             $statement->execute();
             $phones = $statement->fetchAll(PDO::FETCH_ASSOC);

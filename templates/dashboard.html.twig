@@ -160,45 +160,48 @@ document.getElementById('deletePhoneId').value = phoneId;
 				<script src="https://code.highcharts.com/highcharts.js"></script>
 
 				<script>
-					document.addEventListener('DOMContentLoaded', () => {
-const chartData = {{ chartData|raw }}; // Recibir datos del controlador
-console.log(chartData); // Debugging: Verificar los datos en la consola
+    document.addEventListener('DOMContentLoaded', () => {
+        const chartData = {{ chartData|raw }}; // Recibir datos del controlador
+        console.log(chartData); // Debugging: Verificar los datos en la consola
 
-Highcharts.chart('brandPieChart', {
-chart: {
-type: 'pie'
-},
-title: {
-text: 'Distribución de marcas de móviles'
-},
-tooltip: {
-pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-},
-accessibility: {
-point: {
-valueSuffix: '%'
-}
-},
-plotOptions: {
-pie: {
-allowPointSelect: true,
-cursor: 'pointer',
-dataLabels: {
-enabled: true,
-format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-}
-}
-},
-series: [
-{
-name: 'Porcentaje',
-colorByPoint: true,
-data: chartData
-}
-]
-});
-});
-				</script>
+        Highcharts.chart('brandPieChart', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Distribución de marcas de móviles'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Porcentaje',
+                    colorByPoint: true,
+                    data: chartData
+                }
+            ]
+        });
+    });
+</script>
+
+
+				
 
 			</div>
 		</div>

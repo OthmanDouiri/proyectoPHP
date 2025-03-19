@@ -50,8 +50,8 @@ if (strpos($request, '/api') === 0) {
     //To protect API requests for only users who can log in,
     //wee use the AuthMiddleware class to validate the JWT token.
 
-    
-     //AuthMiddleware::protectRoute();
+    //AuthMiddleware::protectRoute(); //proteger la ruta
+
 
     // Rutas de la API
     switch ($request) {
@@ -59,7 +59,6 @@ if (strpos($request, '/api') === 0) {
         // Ruta para obtener todos los teléfonos
         case '/api/phones':
              // Verificar si el usuario está autenticado
-            AuthMiddleware::protectRoute();
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $phoneAPI = new PhoneAPI();
                 $searchQuery = isset($_GET['search']) ? $_GET['search'] : null;
