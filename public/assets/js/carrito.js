@@ -90,22 +90,17 @@ window.onload = function() {
 };
 
 function showCartModal(phone) {
-    // Obtener el modal y su cuerpo
-    const modalBody = document.querySelector('.modal-body'); 
+   // Personalizar el contenido del modal
+   const modalBody = document.querySelector('.modal-body');
+   modalBody.innerHTML = `
+       <div class="d-flex align-items-center">
+           <img src="${phone.image_url}" alt="${phone.name}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover; margin-right: 10px;">
+           <div>¡${phone.name} <strong>ha sido añadido al carrito</strong>!</div>
+       </div>`;
 
-    // Tomar la traducción desde el HTML oculto
-    const addedText = document.getElementById("addedToCartText").textContent.trim();
-
-    // Insertar el contenido en el modal
-    modalBody.innerHTML = `
-        <div class="d-flex align-items-center">
-            <img src="${phone.image_url}" alt="${phone.name}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover; margin-right: 10px;">
-            <div>¡${phone.name} <strong>${addedText}</strong>!</div>
-        </div>`;
-
-    // Mostrar el modal de Bootstrap
-    var cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-    cartModal.show();
+   // Mostrar el modal de Bootstrap
+   var cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+   cartModal.show();  // Mostrar el modal
 }
 
 

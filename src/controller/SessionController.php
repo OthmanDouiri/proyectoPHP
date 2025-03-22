@@ -308,6 +308,8 @@ public function logout() {
 
         // Maneja el registro del usuario
         $message = null;
+        $error = null;
+
         $messageType = 'danger';
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $username = $_POST['username'];
@@ -320,7 +322,7 @@ public function logout() {
             if ($registerResult['success']) {
                 $message = "Registro exitoso. Por favor, inicia sesión.";
             } else {
-                $error = "Error en el registro: " . $registerResult['error'];
+                $error = "Error al registrar el usuario ";
             }
         }
 
@@ -331,6 +333,7 @@ public function logout() {
         // Renderiza la plantilla de Twig
         echo $twig->render('register.html.twig', [
             'message' => $message,
+            'error' => $error
         ]);
     }
 
